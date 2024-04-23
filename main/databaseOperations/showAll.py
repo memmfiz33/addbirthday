@@ -1,7 +1,9 @@
 from telegram import Update
 from telegram.ext import CallbackContext
 from databaseOperations.addNewRecord import create_conn
+from telegram import ParseMode
 import psycopg2
+from prettytable import PrettyTable
 
 def showall_command(update: Update, context: CallbackContext) -> None:
     user_id = update.effective_user.id
@@ -24,9 +26,12 @@ def showall_command(update: Update, context: CallbackContext) -> None:
     cur.close()
     conn.close()
 
-    response = 'Номер записи\t|\tДата рождения\t|\tИмя именинника\t|\tПол\n'
+    # Создание объекта таблицы
+    table = PrettyTable(['Номер записи', 'Дата рождения', 'Имя именинника', 'Пол'])
 
     for row in results:
-        response += f"{row[0]}\t|\t{row[1]}\t|\t{row[2]}\t|\t{row[3]}\n"
+        # Добавляем каждую запись в таблицу
+        table.add_row(row)
 
-    update.message.reply_text(response)
+    # преобразуем таблицу в строку и отправляем пользователю
+    update.message.reply_text(f"```{str(table)}```", parse_mode=ParseMode.MARKDOWN)
