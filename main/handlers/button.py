@@ -1,7 +1,7 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackContext
 from .addbirthday import addbirthday_command
-from databaseOperations.db import save_text
+from databaseOperations.addNewRecord import save_text
 
 def is_leap(year: int) -> bool:
     # функция проверки на високосный год
