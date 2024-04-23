@@ -28,22 +28,55 @@ def handle_message(update: Update, context: CallbackContext) -> None:
     user_id = update.effective_user.id
     if user_id in state:
         if state[user_id][0] == 'awaiting_birth_person':
-            state[user_id] = ['awaiting_birth_month', {'birth_person': text}]
-            keyboard = [
-                [InlineKeyboardButton(m, callback_data=m) for m in ["Январь", "Февраль", "Март"]],
-                [InlineKeyboardButton(m, callback_data=m) for m in ["Апрель", "Май", "Июнь"]],
-                [InlineKeyboardButton(m, callback_data=m) for m in ["Июль", "Август", "Сентябрь"]],
-                [InlineKeyboardButton(m, callback_data=m) for m in ["Октябрь", "Ноябрь", "Декабрь"]],
-            ]
+            state[user_id] = ['awaiting_birth_age', {'birth_person': text}]
+            keyboard = [[InlineKeyboardButton("Пропустить", callback_data='skip')]]
             reply_markup = InlineKeyboardMarkup(keyboard)
-            context.bot.send_message(chat_id=update.effective_chat.id, text='Выберите месяц рождения',
-                                     reply_markup=reply_markup)
-        elif state[user_id][0] == 'awaiting_birth_date':
-            state[user_id][1]['birth_date'] = text
-            state[user_id][0] = 'awaiting_birth_age'
-            context.bot.send_message(chat_id=update.effective_chat.id, text='Введите год рождения')
+            context.bot.send_message(chat_id=update.effective_chat.id, text='Введите год рождения', reply_markup=reply_markup)
         elif state[user_id][0] == 'awaiting_birth_age':
-            state[user_id][1]['birth_age'] = text
+            if text == 'Пропустить':
+                state[user_id][1]['birth_age'] = None
+                state[user_id][0] = 'awaiting_birth_month'
+                keyboard = [
+                    [InlineKeyboardButton(m, callback_data=m) for m in ["Январь", "Февраль", "Март"]],
+                    [InlineKeyboardButton(m, callback_data=m) for m in ["Апрель", "Май", "Июнь"]],
+                    [InlineKeyboardButton(m, callback_data=m) for m in ["Июль", "Август", "Сентябрь"]],
+                    [InlineKeyboardButton(m, callback_data=m) for m in ["Октябрь", "Ноябрь", "Декабрь"]],
+                ]
+                reply_markup = InlineKeyboardMarkup(keyboard)
+                context.bot.send_message(chat_id=update.effective_chat.id, text='Выберите месяц рождения',
+                                         reply_markup=reply_markup)
+            elif not text.isdigit() or not 1901 <= int(text) <= 2024:
+                context.bot.send_message(chat_id=update.effective_chat.id,
+                                         text='Неверный формат данных. Пожалуйста введите год от 1901 до 2024. Пример: 1991')
+                return
+            else:
+                state[user_id][1]['birth_age'] = int(text)
+                state[user_id][0] = 'awaiting_birth_month'
+                keyboard = [
+                    [InlineKeyboardButton(m, callback_data=m) for m in ["Январь", "Февраль", "Март"]],
+                    [InlineKeyboardButton(m, callback_data=m) for m in ["Апрель", "Май", "Июнь"]],
+                    [InlineKeyboardButton(m, callback_data=m) for m in ["Июль", "Август", "Сентябрь"]],
+                    [InlineKeyboardButton(m, callback_data=m) for m in ["Октябрь", "Ноябрь", "Декабрь"]],
+                ]
+                reply_markup = InlineKeyboardMarkup(keyboard)
+                context.bot.send_message(chat_id=update.effective_chat.id, text='Выберите месяц рождения',
+                                         reply_markup=reply_markup)
+        elif state[user_id][0] == 'awaiting_birth_month':
+            state[user_id][1]['birth_month'] = text
+            state[user_id][0] = 'awaiting_birth_date'
+            context.bot.send_message(chat_id=update.effective_chat.id, text='Введите день рождения')
+        elif state[user_id][0] == 'awaiting_birth_date':
+            month_days = {
+                'Апрель': 30, 'Июнь': 30, 'Сентябрь': 30, 'Ноябрь': 30,
+                'Январь': 31, 'Март': 31, 'Май': 31, 'Июль': 31, 'Август': 31, 'Октябрь': 31, 'Декабрь': 31
+            }
+            month_days['Февраль'] = 29 if state[user_id][1]['birth_age'] % 4 == 0 and (state[user_id][1]['birth_age'] % 100 != 0 or state[user_id][1]['birth_age'] % 400 == 0) else 28
+            if not text.isdigit() or not 1 <= int(text) <= month_days[state[user_id][1]['birth_month']]:
+                context.bot.send_message(
+                    chat_id=update.effective_chat.id,
+                    text=f'Неверный формат данных. В выбранном месяце {month_days[state[user_id][1]["birth_month"]]} дней. Пример: {min(7, month_days[state[user_id][1]["birth_month"]])}')
+                return
+            state[user_id][1]['birth_date'] = int(text)
             state[user_id][0] = 'awaiting_sex'
             keyboard = [
                 [InlineKeyboardButton(option, callback_data=option) for option in ['М', 'Ж']],
