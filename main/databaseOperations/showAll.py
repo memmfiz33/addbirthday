@@ -1,9 +1,8 @@
+import locale
 from telegram import Update
 from telegram.ext import CallbackContext
 from databaseOperations.addNewRecord import create_conn
-from telegram import ParseMode
 import psycopg2
-from prettytable import PrettyTable
 
 def showall_command(update: Update, context: CallbackContext) -> None:
     user_id = update.effective_user.id
@@ -18,7 +17,7 @@ def showall_command(update: Update, context: CallbackContext) -> None:
         b.sex AS "Пол"
     FROM birthdays b
     WHERE user_telegram_id = %s
-    ORDER BY b.birth_date DESC
+    ORDER BY b.id DESC
     LIMIT 100
     """, (user_id,))
 
@@ -26,12 +25,31 @@ def showall_command(update: Update, context: CallbackContext) -> None:
     cur.close()
     conn.close()
 
-    # Создание объекта таблицы
-    table = PrettyTable(['Номер записи', 'Дата рождения', 'Имя именинника', 'Пол'])
+    response = 'Номер записи | Дата рождения | Имя именинника | Пол\n'
+
+    # Словарь для перевода названий месяцев
+    months = {
+        "January": "ЯНВ",
+        "February": "ФЕВ",
+        "March": "МАР",
+        "April": "АПР",
+        "May": "МАЙ",
+        "June": "ИЮН",
+        "July": "ИЮЛ",
+        "August": "АВГ",
+        "September": "СЕН",
+        "October": "ОКТ",
+        "November": "НОЯ",
+        "December": "ДЕК",
+    }
 
     for row in results:
-        # Добавляем каждую запись в таблицу
-        table.add_row(row)
+        # Форматирование даты с учетом условий
+        if row[1].year >= 1901:
+            formatted_date = f"{row[1].day} {months[row[1].strftime('%B')]} {row[1].year}"
+        else:
+            formatted_date = f"{row[1].day} {months[row[1].strftime('%B')]}"
 
-    # преобразуем таблицу в строку и отправляем пользователю
-    update.message.reply_text(f"```{str(table)}```", parse_mode=ParseMode.MARKDOWN)
+        response += f"{row[0]} | {formatted_date} | {row[2]} | {row[3]}\n"
+
+    update.message.reply_text(response)
