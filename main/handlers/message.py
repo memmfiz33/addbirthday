@@ -17,7 +17,7 @@ def handle_message(update, context):
     # условие обработки ввода имени
     if context.user_data['stage'] == 'awaiting_birth_person':
         if len(text) > 256:
-            context.bot.send_message(chat_id=update.effective_chat.id, text='Ваше имя слишком длинное.')
+            context.bot.send_message(chat_id=update.effective_chat.id, text='Ваше имя слишком длинное')
         else:
             context.user_data['birth_person'] = text
             context.user_data['stage'] = 'awaiting_birth_age'
@@ -59,8 +59,10 @@ def handle_message(update, context):
         month_days['Февраль'] = 29 if context.user_data['is_leap'] else 28
 
         if not text.isdigit() or not 1 <= int(text) <= month_days[context.user_data['birth_month']]:
-            context.bot.send_message(chat_id=update.effective_chat.id,
-                                     text=f'Неверный формат данных. В выбранном месяце {month_days[context.user_data["birth_month"]]} дней.')
+            context.bot.send_message(
+                chat_id=update.effective_chat.id,
+                text=f'Неверный формат данных. В выбранном месяце {context.user_data["birth_month"]} {month_days[context.user_data["birth_month"]]} дней.'
+            )
         else:
             month_list = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
                           "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"]
