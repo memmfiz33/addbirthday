@@ -1,5 +1,6 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, CallbackQueryHandler, Filters
 from handlers import start_command, addbirthday_command, info_command, handle_message, handle_button
+from databaseOperations.showAll import showall_command
 from typing import Final
 import logging
 
@@ -15,6 +16,7 @@ def main() -> None:
     dp.add_handler(CommandHandler('start', start_command))
     dp.add_handler(CommandHandler('addbirthday', addbirthday_command))
     dp.add_handler(CommandHandler('info', info_command))
+    dp.add_handler(CommandHandler('showall', showall_command))
     dp.add_handler(CallbackQueryHandler(handle_button))
     dp.add_handler(MessageHandler(Filters.text & (~Filters.command), handle_message))
     updater.start_polling()
