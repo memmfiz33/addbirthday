@@ -24,9 +24,9 @@ def showall_command(update: Update, context: CallbackContext) -> None:
     cur.close()
     conn.close()
 
-    response = 'Номер записи | Имя именинника | Пол | Дата рождения\n'
+    response = 'Номер записи\t|\tДата рождения\t|\tИмя именинника\t|\tПол\n'
 
     for row in results:
-        response += f"{row[0]} | {row[1]} | {row[2]} | {row[3]}\n"
+        response += f"{row[0]}\t|\t{row[1]}\t|\t{row[2]}\t|\t{row[3]}\n"
 
     update.message.reply_text(response)
