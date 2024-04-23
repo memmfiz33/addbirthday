@@ -34,15 +34,18 @@ def handle_message(update, context):
             context.user_data['birth_age'] = int(text)
         else:
             context.bot.send_message(chat_id=update.effective_chat.id,
-                                     text='Введите год вашего рождения в формате ГГГГ.')
+                                     text='Неверный формат данных. Пожалуйста введите год от 1901 до текущего года. Пример: 1991')
             return
 
         context.user_data['stage'] = 'awaiting_birth_month'
         context.user_data['is_leap'] = is_leap(context.user_data['birth_age'])
 
-        keyboard = [[InlineKeyboardButton(m, callback_data=m)] for m in
-                    ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь",
-                     "Октябрь", "Ноябрь", "Декабрь"]]
+        keyboard = [
+            [InlineKeyboardButton(m, callback_data=m) for m in ["Январь", "Февраль", "Март"]],
+            [InlineKeyboardButton(m, callback_data=m) for m in ["Апрель", "Май", "Июнь"]],
+            [InlineKeyboardButton(m, callback_data=m) for m in ["Июль", "Август", "Сентябрь"]],
+            [InlineKeyboardButton(m, callback_data=m) for m in ["Октябрь", "Ноябрь", "Декабрь"]],
+        ]
         reply_markup = InlineKeyboardMarkup(keyboard)
         context.bot.send_message(chat_id=update.effective_chat.id, text='Выберите месяц рождения',
                                  reply_markup=reply_markup)
@@ -71,7 +74,7 @@ def handle_message(update, context):
 
             keyboard = [
                 [InlineKeyboardButton(option, callback_data=option) for option in ['М', 'Ж']],
-                [InlineKeyboardButton("Пропустить", callback_data='Пропустить')]
+                [InlineKeyboardButton("Пропустить", callback_data='undefined')]
             ]
             reply_markup = InlineKeyboardMarkup(keyboard)
             context.bot.send_message(chat_id=update.effective_chat.id, text='Выберите пол', reply_markup=reply_markup)

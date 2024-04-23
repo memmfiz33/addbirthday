@@ -26,9 +26,12 @@ def handle_button(update: Update, context: CallbackContext) -> None:
         context.user_data['stage'] = 'awaiting_birth_month'
         context.user_data['is_leap'] = is_leap(context.user_data['birth_age'])
 
-        keyboard = [[InlineKeyboardButton(m, callback_data=m)] for m in
-                    ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь",
-                     "Октябрь", "Ноябрь", "Декабрь"]]
+        keyboard = [
+            [InlineKeyboardButton(m, callback_data=m) for m in ["Январь", "Февраль", "Март"]],
+            [InlineKeyboardButton(m, callback_data=m) for m in ["Апрель", "Май", "Июнь"]],
+            [InlineKeyboardButton(m, callback_data=m) for m in ["Июль", "Август", "Сентябрь"]],
+            [InlineKeyboardButton(m, callback_data=m) for m in ["Октябрь", "Ноябрь", "Декабрь"]],
+        ]
         reply_markup = InlineKeyboardMarkup(keyboard)
         context.bot.send_message(chat_id=update.effective_chat.id, text='Выберите месяц рождения',
                                  reply_markup=reply_markup)
