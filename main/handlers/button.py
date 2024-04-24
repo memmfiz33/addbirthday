@@ -1,7 +1,9 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackContext
 from .addbirthday import addbirthday_command
-from databaseOperations.addNewRecord import save_text
+from databaseOperations.addNewRecord import save_text, create_conn
+
+# остальной код остается без изменений
 
 def is_leap(year: int) -> bool:
     # функция проверки на високосный год
@@ -20,6 +22,21 @@ def handle_button(update: Update, context: CallbackContext) -> None:
 
     if query.data == 'addbirthday':
         addbirthday_command(update, context)
+
+    elif query.data.startswith('delete:'):
+        id_to_delete = query.data.replace("delete:", "")
+
+        conn = create_conn()
+        cur = conn.cursor()
+
+        cur.execute("UPDATE birthdays SET record_status = 'DELETED' WHERE id = %s", (id_to_delete,))
+
+        conn.commit()
+        cur.close()
+        conn.close()
+
+        query.message.reply_text(f"Запись {id_to_delete} удалена.")
+        return
 
     elif context.user_data['stage'] == 'awaiting_birth_age' and query.data == 'skip':
         context.user_data['birth_age'] = 1900
