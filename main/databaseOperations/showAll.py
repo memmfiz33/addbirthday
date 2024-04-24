@@ -17,6 +17,7 @@ def showall_command(update: Update, context: CallbackContext) -> None:
         b.sex AS "Пол"
     FROM birthdays b
     WHERE user_telegram_id = %s
+    AND record_status = 'ACTIVE'
     ORDER BY b.id DESC
     LIMIT 100
     """, (user_id,))
