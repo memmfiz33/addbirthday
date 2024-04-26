@@ -24,6 +24,7 @@ def save_text(user_id: int, first_name: str, last_name: str, username: str, mess
     messages['user_telegram_id'] = user_id
     messages['user_telegram_name'] = username
     messages['last_modified'] = datetime.now().isoformat(timespec='seconds')
+    messages['is_scheduled'] = False  # set is_scheduled to False
 
     # формирование даты рождения
     birth_date = messages.get('birth_date')
@@ -32,13 +33,13 @@ def save_text(user_id: int, first_name: str, last_name: str, username: str, mess
     query = """
         INSERT INTO birthdays (
             birth_person, birth_date, sex, id, user_name, 
-            user_telegram_id, user_telegram_name, last_modified, record_status
-        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            user_telegram_id, user_telegram_name, last_modified, record_status, is_scheduled
+        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
     """
     values = (
         messages['birth_person'], birth_date, messages['sex'],
         messages['id'], messages['user_name'], messages['user_telegram_id'],
-        messages['user_telegram_name'], messages['last_modified'], messages['record_status']
+        messages['user_telegram_name'], messages['last_modified'], messages['record_status'], messages['is_scheduled']
     )
     cur.execute(query, values)
     conn.commit()
