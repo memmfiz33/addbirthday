@@ -2,8 +2,9 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, CallbackQueryH
 from handlers import start_command, addbirthday_command, info_command, handle_message, handle_button, delete_command
 from databaseOperations.showAll import showall_command
 from notifications.notify import scheduler_for_notifications
-import threading
+from notifications.create_notifications import create_notifications  # импортируйте вашу функцию
 from typing import Final
+import threading
 import logging
 
 TOKEN: Final = '6948226088:AAEotmW-2QhzP4SyzIz0biORxpB-0nv4nkY'
@@ -25,6 +26,10 @@ def main() -> None:
  # нотификации
     notification_thread = threading.Thread(target=scheduler_for_notifications, args=(TOKEN,), daemon=True)
     notification_thread.start()
+
+# создание уведомлений
+    create_notifications_thread = threading.Thread(target=create_notifications, daemon=True)
+    create_notifications_thread.start()
 
     updater.start_polling()
     updater.idle()

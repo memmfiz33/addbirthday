@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, Text
+from sqlalchemy import Column, Integer, String, DateTime, Text, Boolean, TIMESTAMP
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -13,5 +13,19 @@ class Notification(Base):
     scheduled_time = Column(DateTime)
     notification_text = Column(Text)
     notification_status = Column(String)
-    lastmodified = Column(DateTime)
+    lastmodified = Column(TIMESTAMP)  # Используйте TIMESTAMP вместо Timestamp
     error_logs = Column(Text)
+
+class Birthdays(Base):
+    __tablename__ = 'birthdays'
+
+    id = Column(Integer, primary_key=True)  # Добавьте знак равенства (=)
+    user_name = Column(Text)
+    user_telegram_id = Column(Integer)
+    user_telegram_name = Column(Text)
+    birth_person = Column(DateTime)
+    last_modified = Column(DateTime)
+    sex = Column(Text)
+    birth_date = Column(DateTime)
+    record_status = Column(Text)
+    is_scheduled = Column(Boolean)
