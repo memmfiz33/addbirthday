@@ -3,6 +3,7 @@ from handlers import start_command, addbirthday_command, info_command, handle_me
 from databaseOperations.showAll import showall_command
 from notifications.notify import scheduler_for_notifications
 from notifications.create_notifications import create_notifications  # импортируйте вашу функцию
+from notifications.delete_notifications import delete_notifications  # импортируйте вашу функцию
 from typing import Final
 import threading
 import logging
@@ -30,6 +31,10 @@ def main() -> None:
 # создание уведомлений
     create_notifications_thread = threading.Thread(target=create_notifications, daemon=True)
     create_notifications_thread.start()
+
+# удаление уведомлений
+    delete_notifications_thread = threading.Thread(target=delete_notifications, daemon=True)
+    delete_notifications_thread.start()
 
     updater.start_polling()
     updater.idle()
