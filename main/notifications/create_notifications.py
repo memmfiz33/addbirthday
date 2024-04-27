@@ -49,6 +49,7 @@ def create_notifications():
 
             # Обновите запись birthdays
             birthday.is_scheduled = True
+            birthday.lastmodified=datetime.datetime.now()
             session.add(birthday)
 
             # Сохраните изменения
