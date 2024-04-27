@@ -56,7 +56,7 @@ scheduler = BackgroundScheduler(timezone=utc)
 delete_notifications()
 
 # Добавьте функцию в планировщик
-scheduler.add_job(delete_notifications, 'interval', hours=24)
+scheduler.add_job(delete_notifications, 'interval', minutes=1)
 
 # Запустите планировщик в отдельном потоке
 scheduler_thread = threading.Thread(target=scheduler.start)
