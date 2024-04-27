@@ -39,7 +39,9 @@ def create_notifications():
                 birth_date=birthday.birth_date,
                 scheduled_time=datetime.datetime.now().replace(month=birthday.birth_date.month, day=birthday.birth_date.day, hour=9, minute=0, second=0),
                 notification_status='CREATED',
-                lastmodified=datetime.datetime.now()
+                lastmodified=datetime.datetime.now(),
+                notification_text=f'Сегодня у {birthday.birth_person} день рождения, не забудьте поздравить!'
+                # добавьте это поле
             )
 
             # Добавьте новую запись в сессию
