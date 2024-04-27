@@ -21,27 +21,34 @@ def create_notifications():
     session = Session()
 
     try:
-        session = Session()
-        session.execute(text('SELECT 1'))
-        session.close()
-        print('Database connection successful')
-    except Exception as e:
-        print('Failed to connect to database:', e)
-    try:
         # Найдите все активные записи в таблице birthdays
         active_birthdays = session.query(Birthdays).filter(and_(Birthdays.record_status=='ACTIVE', Birthdays.is_scheduled==False)).all()
 
         for birthday in active_birthdays:
+            # Получите текущую дату и время
+            now = datetime.datetime.now()
+
+            # Создайте дату рождения для текущего года
+            birth_date_this_year = now.replace(month=birthday.birth_date.month, day=birthday.birth_date.day)
+
+            # Если дата рождения уже прошла в этом году, установите scheduled_time на следующий год
+            if now > birth_date_this_year:
+                scheduled_time = now.replace(year=now.year + 1, month=birthday.birth_date.month, day=birthday.birth_date.day,
+                                             hour=9, minute=0, second=0)
+            # В противном случае установите scheduled_time на текущий год
+            else:
+                scheduled_time = now.replace(year=now.year, month=birthday.birth_date.month, day=birthday.birth_date.day,
+                                             hour=9, minute=0, second=0)
+
             # Создайте новую запись в таблице notifications
             notification = Notification(
                 user_telegram_id=birthday.user_telegram_id,
                 birthdays_id=birthday.id,
                 birth_date=birthday.birth_date,
-                scheduled_time=datetime.datetime.now().replace(month=birthday.birth_date.month, day=birthday.birth_date.day, hour=9, minute=0, second=0),
+                scheduled_time=scheduled_time,
                 notification_status='CREATED',
                 lastmodified=datetime.datetime.now(),
                 notification_text=f'Сегодня у {birthday.birth_person} день рождения, не забудьте поздравить!'
-                # добавьте это поле
             )
 
             # Добавьте новую запись в сессию
