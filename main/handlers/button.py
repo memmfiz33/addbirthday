@@ -56,7 +56,7 @@ def handle_button(update: Update, context: CallbackContext) -> None:
     elif context.user_data['stage'] == 'awaiting_birth_month':
         context.user_data['birth_month'] = query.data
         context.user_data['stage'] = 'awaiting_birth_date'
-        context.bot.send_message(chat_id=update.effective_chat.id, text='Введите дату рождения')
+        context.bot.send_message(chat_id=update.effective_chat.id, text='Введите ЧИСЛО рождения')
 
     elif context.user_data['stage'] == 'awaiting_sex':
         context.user_data['sex'] = query.data

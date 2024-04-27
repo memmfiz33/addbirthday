@@ -23,7 +23,7 @@ def handle_message(update, context):
             context.user_data['stage'] = 'awaiting_birth_age'
             keyboard = [[InlineKeyboardButton("Пропустить", callback_data='skip')]]
             reply_markup = InlineKeyboardMarkup(keyboard)
-            context.bot.send_message(chat_id=update.effective_chat.id, text='Введите год рождения',
+            context.bot.send_message(chat_id=update.effective_chat.id, text='Введите ГОД рождения',
                                      reply_markup=reply_markup)
 
     # условие обработки ввода года рождения
@@ -47,7 +47,7 @@ def handle_message(update, context):
             [InlineKeyboardButton(m, callback_data=m) for m in ["Октябрь", "Ноябрь", "Декабрь"]],
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
-        context.bot.send_message(chat_id=update.effective_chat.id, text='Выберите месяц рождения',
+        context.bot.send_message(chat_id=update.effective_chat.id, text='Выберите МЕСЯЦ рождения',
                                  reply_markup=reply_markup)
 
     # условие обработки ввода даты рождения
