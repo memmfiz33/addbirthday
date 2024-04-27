@@ -4,7 +4,7 @@ from sqlalchemy import create_engine, text, and_
 from sqlalchemy.orm import sessionmaker
 from databaseOperations.models import Birthdays, Notification  # замените на имя вашего модуля
 import datetime
-import time
+import threading
 
 # Создайте и настройте логгер
 import logging
@@ -68,7 +68,6 @@ create_notifications()
 # Добавьте функцию в планировщик
 scheduler.add_job(create_notifications, 'interval', hours=24)
 
-scheduler.start()
-
-while True:
-    time.sleep(1)
+# Запустите планировщик в отдельном потоке
+scheduler_thread = threading.Thread(target=scheduler.start)
+scheduler_thread.start()
