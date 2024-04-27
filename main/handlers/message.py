@@ -16,7 +16,7 @@ def handle_message(update, context):
 
     # условие обработки ввода имени
     if context.user_data['stage'] == 'awaiting_birth_person':
-        if len(text) > 256:
+        if len(text) > 100:
             context.bot.send_message(chat_id=update.effective_chat.id, text='Ваше имя слишком длинное')
         else:
             context.user_data['birth_person'] = text
