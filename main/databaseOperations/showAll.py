@@ -53,4 +53,4 @@ def showall_command(update: Update, context: CallbackContext) -> None:
 
         response += f"{row[0]} | {formatted_date} | {row[2]} | {row[3]}\n"
 
-    update.message.reply_text(response)
+    update.callback_query.message.reply_text(response)

@@ -1,6 +1,8 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackContext
 from .addbirthday import addbirthday_command
+from .delete import delete_command
+from databaseOperations.showAll import showall_command
 from databaseOperations.addNewRecord import save_text, create_conn
 
 def handle_button(update: Update, context: CallbackContext) -> None:
@@ -13,6 +15,12 @@ def handle_button(update: Update, context: CallbackContext) -> None:
 
     if query.data == 'addbirthday':
         addbirthday_command(update, context)
+
+    elif query.data == 'showall':
+        showall_command(update, context)
+
+    elif query.data == 'delete':
+        delete_command(update, context)
 
     elif query.data.startswith('delete:'):
         id_to_delete = query.data.replace("delete:", "")

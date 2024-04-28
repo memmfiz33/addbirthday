@@ -22,4 +22,4 @@ def delete_command(update: Update, context: CallbackContext) -> None:
     conn.close()
 
     # Отправляем сообщение с кнопками
-    update.message.reply_text('Какую запись удалить?', reply_markup=InlineKeyboardMarkup(keyboard))
+    update.callback_query.message.reply_text('Какую запись удалить?', reply_markup=InlineKeyboardMarkup(keyboard))
