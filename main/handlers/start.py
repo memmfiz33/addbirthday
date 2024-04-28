@@ -1,6 +1,7 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackContext
 
+
 def start_command(update: Update, context: CallbackContext) -> None:
     keyboard = [
         [InlineKeyboardButton('Добавить ДР!', callback_data='addbirthday')],
@@ -8,4 +9,10 @@ def start_command(update: Update, context: CallbackContext) -> None:
         [InlineKeyboardButton('Удалить запись', callback_data='delete')]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    update.message.reply_text('Выберите действие:', reply_markup=reply_markup)
+
+    # Если это обновление сообщения, используем update.message
+    if update.message is not None:
+        update.message.reply_text('Выберите действие:', reply_markup=reply_markup)
+    # Если это обновление callback-запроса, используем update.callback_query.message
+    elif update.callback_query is not None:
+        update.callback_query.message.reply_text('Выберите действие:', reply_markup=reply_markup)

@@ -1,5 +1,5 @@
 import locale
-from telegram import Update
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackContext
 from databaseOperations.addNewRecord import create_conn
 import psycopg2
@@ -53,4 +53,8 @@ def showall_command(update: Update, context: CallbackContext) -> None:
 
         response += f"{row[0]} | {formatted_date} | {row[2]} | {row[3]}\n"
 
-    update.callback_query.message.reply_text(response)
+    keyboard = [
+        [InlineKeyboardButton('Отмена', callback_data='start')]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    update.effective_message.reply_text(response, reply_markup=reply_markup)

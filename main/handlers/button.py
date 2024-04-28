@@ -4,11 +4,20 @@ from .addbirthday import addbirthday_command
 from .delete import delete_command
 from databaseOperations.showAll import showall_command
 from databaseOperations.addNewRecord import save_text, create_conn
+from .start import start_command  # Импортируем start_command из модуля start
 
 def handle_button(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
     user_id = update.effective_user.id
     query.answer()
+
+    if 'stage' not in context.user_data:
+        context.user_data['stage'] = ''
+
+    if query.data == 'start':
+        query.message.reply_text('Отмена действия. Вы перемещены на главный экран')
+        start_command(update, context)  # Вызываем start_command
+        return
 
     if 'stage' not in context.user_data:
         context.user_data['stage'] = ''
