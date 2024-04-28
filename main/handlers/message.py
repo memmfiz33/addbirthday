@@ -1,13 +1,11 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from datetime import datetime, date
 
-
 def is_leap(year: int) -> bool:
     # функция проверки на високосный год
     if year % 4 == 0 and (year % 100 != 0 or year % 400 == 0):
         return True
     return False
-
 
 def handle_message(update, context):
     text = update.message.text
