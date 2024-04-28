@@ -48,7 +48,7 @@ def create_notifications():
                 scheduled_time=scheduled_time,
                 notification_status='CREATED',
                 lastmodified=datetime.datetime.now(),
-                notification_text=f'Сегодня у {birthday.birth_person} день рождения, не забудьте поздравить!'
+                notification_text=f'Сегодня {birthday.birth_person} празднует свой день рождения, не забудьте поздравить!'
             )
 
             # Добавьте новую запись в сессию

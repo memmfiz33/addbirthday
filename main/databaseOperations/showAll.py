@@ -26,7 +26,7 @@ def showall_command(update: Update, context: CallbackContext) -> None:
     cur.close()
     conn.close()
 
-    response = 'Номер записи | Дата рождения | Имя именинника | Пол\n'
+    response = 'ID | Дата рождения | Имя именинника | Пол\n'
 
     # Словарь для перевода названий месяцев
     months = {

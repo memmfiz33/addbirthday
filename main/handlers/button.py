@@ -3,15 +3,6 @@ from telegram.ext import CallbackContext
 from .addbirthday import addbirthday_command
 from databaseOperations.addNewRecord import save_text, create_conn
 
-# остальной код остается без изменений
-
-def is_leap(year: int) -> bool:
-    # функция проверки на високосный год
-    if year % 4 == 0 and (year % 100 != 0 or year % 400 == 0):
-        return True
-    return False
-
-
 def handle_button(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
     user_id = update.effective_user.id
@@ -41,7 +32,6 @@ def handle_button(update: Update, context: CallbackContext) -> None:
     elif context.user_data['stage'] == 'awaiting_birth_age' and query.data == 'skip':
         context.user_data['birth_age'] = 1900
         context.user_data['stage'] = 'awaiting_birth_month'
-        context.user_data['is_leap'] = is_leap(context.user_data['birth_age'])
 
         keyboard = [
             [InlineKeyboardButton(m, callback_data=m) for m in ["Январь", "Февраль", "Март"]],
