@@ -19,7 +19,7 @@ def showall_command(update: Update, context: CallbackContext) -> None:
     WHERE user_telegram_id = %s
     AND record_status = 'ACTIVE'
     ORDER BY b.id DESC
-    LIMIT 100
+    LIMIT 40
     """, (user_id,))
 
     results = cur.fetchall()
