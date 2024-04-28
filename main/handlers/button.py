@@ -93,4 +93,5 @@ def handle_button(update: Update, context: CallbackContext) -> None:
             save_text(user_id, update.effective_user.first_name, update.effective_user.last_name,
                       update.effective_user.username, context.user_data)
             del context.user_data['stage']
-            context.bot.send_message(chat_id=update.effective_chat.id, text='Спасибо, данные сохранены')
+            context.bot.send_message(chat_id=update.effective_chat.id, text='Данные успешно сохранены!')
+            start_command(update, context)  # Вызываем start
