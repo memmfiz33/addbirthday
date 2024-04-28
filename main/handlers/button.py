@@ -40,6 +40,7 @@ def handle_button(update: Update, context: CallbackContext) -> None:
         conn.close()
 
         query.message.reply_text(f"Запись {id_to_delete} удалена.")
+        start_command(update, context)  # Вызываем start_command
         return
 
     elif query.data == 'start':  # Обрабатываем нажатие кнопки "Отмена"
