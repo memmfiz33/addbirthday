@@ -54,7 +54,7 @@ def handle_message(update, context):
             'Апрель': 30, 'Июнь': 30, 'Сентябрь': 30, 'Ноябрь': 30,
             'Январь': 31, 'Март': 31, 'Май': 31, 'Июль': 31, 'Август': 31, 'Октябрь': 31, 'Декабрь': 31
         }
-        month_days['Февраль'] = 29 if context.user_data['is_leap'] else 28
+        month_days['Февраль'] = 29 if context.user_data.get('is_leap') else 28
 
         if not text.isdigit() or not 1 <= int(text) <= month_days[context.user_data['birth_month']]:
             context.bot.send_message(
