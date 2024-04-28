@@ -17,6 +17,9 @@ def delete_command(update: Update, context: CallbackContext) -> None:
     for id, name in cur.fetchall():
         keyboard.append([InlineKeyboardButton(f"{name} (ID: {id})", callback_data=f"delete:{id}")])
 
+    # Добавляем кнопку "Отмена"
+    keyboard.append([InlineKeyboardButton('==ОТМЕНА==', callback_data='start')])
+
     # Закрываем соединение
     cur.close()
     conn.close()
