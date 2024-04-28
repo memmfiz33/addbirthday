@@ -12,6 +12,8 @@ def handle_message(update, context):
     if 'stage' not in context.user_data:
         context.user_data['stage'] = ''
 
+    # Ваш код...
+
     # условие обработки ввода имени
     if context.user_data['stage'] == 'awaiting_birth_person':
         if len(text) > 100:
@@ -32,8 +34,13 @@ def handle_message(update, context):
         elif text.isdigit() and 1901 <= int(text) <= datetime.now().year:
             context.user_data['birth_age'] = int(text)
         else:
-            context.bot.send_message(chat_id=update.effective_chat.id,
-                                     text='Неверный формат данных. Пожалуйста введите год от 1901 до текущего года. Пример: 1991')
+            keyboard = [[InlineKeyboardButton('Отмена', callback_data='start')]]  # Добавляем кнопку "Отмена"
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            context.bot.send_message(
+                chat_id=update.effective_chat.id,
+                text='Неверный формат данных. Пожалуйста введите год от 1901 до текущего года. Пример: 1991',
+                reply_markup=reply_markup
+            )
             return
 
         context.user_data['stage'] = 'awaiting_birth_month'
@@ -49,9 +56,6 @@ def handle_message(update, context):
         reply_markup = InlineKeyboardMarkup(keyboard)
         context.bot.send_message(chat_id=update.effective_chat.id, text='Выберите МЕСЯЦ рождения',
                                  reply_markup=reply_markup)
-
-    # условие обработки ввода даты рождения
-    # Ваш код...
 
     # условие обработки ввода даты рождения
     elif context.user_data['stage'] == 'awaiting_birth_date':
