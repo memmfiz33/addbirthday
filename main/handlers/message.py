@@ -19,8 +19,7 @@ def handle_message(update, context):
         else:
             context.user_data['birth_person'] = text
             context.user_data['stage'] = 'awaiting_birth_age'
-            keyboard = [[InlineKeyboardButton("Пропустить", callback_data='skip')],
-                        [InlineKeyboardButton('Отмена', callback_data='start')]]  # Добавляем кнопку "Отмена"
+            keyboard = [[InlineKeyboardButton("Пропустить", callback_data='skip'), InlineKeyboardButton('Отмена', callback_data='start')]]  # Добавляем кнопку "Отмена"
             reply_markup = InlineKeyboardMarkup(keyboard)
             context.bot.send_message(chat_id=update.effective_chat.id, text='Введите ГОД рождения',
                                      reply_markup=reply_markup)
@@ -36,7 +35,7 @@ def handle_message(update, context):
             reply_markup = InlineKeyboardMarkup(keyboard)
             context.bot.send_message(
                 chat_id=update.effective_chat.id,
-                text='Неверный формат данных. Пожалуйста введите год от 1901 до текущего года. Пример: 1991',
+                text='Пожалуйста введите год от 1901 до текущего года. Пример: 1991',
                 reply_markup=reply_markup
             )
             return
@@ -55,7 +54,6 @@ def handle_message(update, context):
         context.bot.send_message(chat_id=update.effective_chat.id, text='Выберите МЕСЯЦ рождения',
                                  reply_markup=reply_markup)
 
-    # условие обработки ввода даты рождения
     # условие обработки ввода даты рождения
     elif context.user_data['stage'] == 'awaiting_birth_date':
         month_days = {
@@ -78,6 +76,7 @@ def handle_message(update, context):
         else:
             month_list = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
                           "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"]
+
             # формирование даты рождения - получаем год, месяц и день, затем создаем объект date
             birth_year = context.user_data.get('birth_age')
             birth_month = month_list.index(
@@ -86,7 +85,7 @@ def handle_message(update, context):
             context.user_data['birth_date'] = date(birth_year, birth_month, birth_day)
             context.user_data['stage'] = 'awaiting_sex'
 
-        # обработка ввода пола
+            # обработка ввода пола
             keyboard = [
                 [InlineKeyboardButton(option, callback_data=option) for option in ['М', 'Ж']],
                 [InlineKeyboardButton("Пропустить", callback_data='-')],
