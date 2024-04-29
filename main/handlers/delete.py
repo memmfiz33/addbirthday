@@ -31,7 +31,7 @@ def delete_command(update: Update, context: CallbackContext) -> None:
         keyboard.append([InlineKeyboardButton(f"{name} (ID: {id})", callback_data=f"delete:{id}")])
 
     # Добавляем кнопки страниц
-    keyboard.append([InlineKeyboardButton(f"Страница {i}", callback_data=f"page:{i}") for i in range(1, 5)])
+    keyboard.append([InlineKeyboardButton(f"Страница {i}" if i != (record_offset // 10) + 1 else f"*Страница {i}*", callback_data=f"page:{i}") for i in range(1, 5)])
 
     # Если мы получили меньше 10 записей, делаем последующие кнопки страниц неактивными
     if len(records) < 10:
