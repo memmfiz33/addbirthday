@@ -20,8 +20,12 @@ def handle_button(update: Update, context: CallbackContext) -> None:
     elif query.data == 'showall':
         showall_command(update, context)
 
+    elif query.data == 'show_more':
+        delete_command(update, context)
+
     elif query.data == 'delete':
         delete_command(update, context)
+
 
     elif query.data.startswith('delete:'):
         id_to_delete = query.data.replace("delete:", "")
