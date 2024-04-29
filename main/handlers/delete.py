@@ -7,9 +7,10 @@ def delete_command(update: Update, context: CallbackContext) -> None:
     if update.message and update.message.text == '/delete':
         context.user_data['record_offset'] = 0
 
-    # Увеличиваем смещение на 10 только при нажатии на кнопку "Показать еще"
-    if update.callback_query and update.callback_query.data == 'show_more':
-        context.user_data['record_offset'] += 10
+    # Устанавливаем смещение в зависимости от выбранной страницы
+    if update.callback_query and update.callback_query.data.startswith('page:'):
+        page = int(update.callback_query.data.replace("page:", ""))
+        context.user_data['record_offset'] = (page - 1) * 10
 
     conn = create_conn()
     cur = conn.cursor()
@@ -29,9 +30,13 @@ def delete_command(update: Update, context: CallbackContext) -> None:
     for id, name in records:
         keyboard.append([InlineKeyboardButton(f"{name} (ID: {id})", callback_data=f"delete:{id}")])
 
-    # Если мы получили 10 записей, добавляем кнопку "Показать еще"
-    if len(records) == 10:
-        keyboard.append([InlineKeyboardButton('===Показать еще 10===', callback_data='show_more')])
+    # Добавляем кнопки страниц
+    keyboard.append([InlineKeyboardButton(f"Страница {i}", callback_data=f"page:{i}") for i in range(1, 5)])
+
+    # Если мы получили меньше 10 записей, делаем последующие кнопки страниц неактивными
+    if len(records) < 10:
+        for i in range((record_offset // 10) + 2, 5):
+            keyboard[-1][i - 1] = InlineKeyboardButton(f"Страница {i}", callback_data="noop")
 
     # Добавляем кнопку "Отмена"
     keyboard.append([InlineKeyboardButton('==ОТМЕНА==', callback_data='start')])

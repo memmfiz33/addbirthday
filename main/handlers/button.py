@@ -20,12 +20,8 @@ def handle_button(update: Update, context: CallbackContext) -> None:
     elif query.data == 'showall':
         showall_command(update, context)
 
-    elif query.data == 'show_more':
-        delete_command(update, context)
-
     elif query.data == 'delete':
         delete_command(update, context)
-
 
     elif query.data.startswith('delete:'):
         id_to_delete = query.data.replace("delete:", "")
@@ -42,6 +38,12 @@ def handle_button(update: Update, context: CallbackContext) -> None:
         query.message.reply_text(f"Запись {id_to_delete} удалена.")
         start_command(update, context)  # Вызываем start_command
         return
+
+    elif query.data.startswith('page:'):  # Обрабатываем нажатие на кнопки страниц
+        delete_command(update, context)
+
+    elif query.data == 'noop':  # Обрабатываем нажатие на неактивные кнопки страниц
+        pass
 
     elif query.data == 'start':  # Обрабатываем нажатие кнопки "Отмена"
         query.message.reply_text('Отмена действия. Вы перемещены на главный экран')
