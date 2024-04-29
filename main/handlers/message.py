@@ -12,8 +12,6 @@ def handle_message(update, context):
     if 'stage' not in context.user_data:
         context.user_data['stage'] = ''
 
-    # Ваш код...
-
     # условие обработки ввода имени
     if context.user_data['stage'] == 'awaiting_birth_person':
         if len(text) > 100:
@@ -58,19 +56,23 @@ def handle_message(update, context):
                                  reply_markup=reply_markup)
 
     # условие обработки ввода даты рождения
+    # условие обработки ввода даты рождения
     elif context.user_data['stage'] == 'awaiting_birth_date':
         month_days = {
             'Апрель': 30, 'Июнь': 30, 'Сентябрь': 30, 'Ноябрь': 30,
             'Январь': 31, 'Март': 31, 'Май': 31, 'Июль': 31, 'Август': 31, 'Октябрь': 31, 'Декабрь': 31
         }
-        month_days['Февраль'] = 29 if context.user_data.get('is_leap') else 28
+        if context.user_data.get('birth_age') != 1900 and context.user_data.get('is_leap'):
+            month_days['Февраль'] = 29
+        else:
+            month_days['Февраль'] = 28
 
         if not text.isdigit() or not 1 <= int(text) <= month_days[context.user_data['birth_month']]:
             keyboard = [[InlineKeyboardButton('Отмена', callback_data='start')]]  # Добавляем кнопку "Отмена"
             reply_markup = InlineKeyboardMarkup(keyboard)
             context.bot.send_message(
                 chat_id=update.effective_chat.id,
-                text=f'Неверный формат данных. В выбранном месяце {context.user_data["birth_month"]} {month_days[context.user_data["birth_month"]]} дней.',
+                text=f'В выбранном месяце {context.user_data["birth_month"]} {month_days[context.user_data["birth_month"]]} дней. Введите корректную дату или отмените действие',
                 reply_markup=reply_markup
             )
         else:
@@ -84,6 +86,7 @@ def handle_message(update, context):
             context.user_data['birth_date'] = date(birth_year, birth_month, birth_day)
             context.user_data['stage'] = 'awaiting_sex'
 
+        # обработка ввода пола
             keyboard = [
                 [InlineKeyboardButton(option, callback_data=option) for option in ['М', 'Ж']],
                 [InlineKeyboardButton("Пропустить", callback_data='-')],
