@@ -5,6 +5,7 @@ from .delete import delete_command
 from databaseOperations.showAll import showall_command
 from databaseOperations.addNewRecord import save_text, create_conn
 from .start import start_command  # Импортируем start_command из модуля start
+from .info import info_command  # Добавьте эту строку
 
 def handle_button(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
@@ -22,6 +23,9 @@ def handle_button(update: Update, context: CallbackContext) -> None:
 
     elif query.data == 'delete':
         delete_command(update, context)
+
+    elif query.data == 'info':  # Добавьте эту строку
+        info_command(update, context)
 
     elif query.data.startswith('delete:'):
         id_to_delete = query.data.replace("delete:", "")
