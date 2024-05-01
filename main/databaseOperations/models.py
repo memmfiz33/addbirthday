@@ -1,11 +1,19 @@
 from sqlalchemy import Column, Integer, String, DateTime, Text, Boolean, TIMESTAMP
 from sqlalchemy.ext.declarative import declarative_base
-import psycopg2
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from dotenv import load_dotenv
+import os
+import psycopg2
 
-# sqlalchemy db connection
-engine = create_engine('postgresql://postgres:postgres@localhost:5432/addbirthday')
+load_dotenv()
+
+db_user = os.getenv('DB_USER')
+db_password = os.getenv('DB_PASSWORD')
+db_host = os.getenv('DB_HOST')
+db_name = os.getenv('DB_NAME')
+
+engine = create_engine(f'postgresql://{db_user}:{db_password}@{db_host}/{db_name}')
 Session = sessionmaker(bind=engine)
 
 def get_session():
@@ -16,10 +24,10 @@ Base = declarative_base()
 # Функция для создания низкоуровневого подключения к базе данных
 def create_conn():
     conn = psycopg2.connect(
-        dbname="addbirthday",
-        user="postgres",
-        password="postgres",
-        host="localhost"
+        dbname=db_name,
+        user=db_user,
+        password=db_password,
+        host=db_host
     )
     return conn
 
