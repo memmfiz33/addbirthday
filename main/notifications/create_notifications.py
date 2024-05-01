@@ -1,17 +1,13 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 from pytz import utc
 from sqlalchemy import create_engine, text, and_
-from sqlalchemy.orm import sessionmaker
 from databaseOperations.models import Birthdays, Notification  # замените на имя вашего модуля
 import datetime
 import threading
 from databaseOperations.models import get_session
 
-# Создайте и настройте логгер
-import logging
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
-logger = logging.getLogger(__name__)
+# Импортируйте настроенный логгер
+from logger.logger import logger
 
 # Создайте подключение к базе данных
 def create_notifications():
@@ -30,15 +26,13 @@ def create_notifications():
             try:
                 # Если дата рождения - 29 февраля
                 if birthday.birth_date.month == 2 and birthday.birth_date.day == 29:
-                    # Если дата рождения - 29 февраля
-                    if birthday.birth_date.month == 2 and birthday.birth_date.day == 29:
-                        # Найдите ближайший високосный год, начиная с следующего года
-                        leap_year = now.year + 1
-                        while not (leap_year % 4 == 0 and (leap_year % 100 != 0 or leap_year % 400 == 0)):
-                            leap_year += 1
+                    # Найдите ближайший високосный год, начиная с следующего года
+                    leap_year = now.year + 1
+                    while not (leap_year % 4 == 0 and (leap_year % 100 != 0 or leap_year % 400 == 0)):
+                        leap_year += 1
 
-                        # Установите scheduled_time на 29 февраля ближайшего високосного года
-                        scheduled_time = now.replace(year=leap_year, month=2, day=29, hour=9, minute=0, second=0)
+                    # Установите scheduled_time на 29 февраля ближайшего високосного года
+                    scheduled_time = now.replace(year=leap_year, month=2, day=29, hour=9, minute=0, second=0)
                 else:
                     # Создайте дату рождения для текущего года
                     birth_date_this_year = now.replace(month=birthday.birth_date.month, day=birthday.birth_date.day)

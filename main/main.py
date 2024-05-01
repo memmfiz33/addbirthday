@@ -5,18 +5,14 @@ from notifications.notify import scheduler_for_notifications
 from notifications.create_notifications import create_notifications
 from notifications.delete_notifications import delete_notifications
 from handlers.support import support_command, handle_support
-from logger.logger import logger
+from logger.logger import logger  # Импортируйте настроенный логгер
 from dotenv import load_dotenv
 import threading
-import logging
 import os
 
 load_dotenv()
 
 TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
-
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 def main() -> None:
     logger.info('Starting bot....')

@@ -1,6 +1,5 @@
 from telegram import Update, ForceReply
 from telegram.ext import CallbackContext, CommandHandler, MessageHandler, Filters
-import psycopg2
 from datetime import datetime
 from databaseOperations.models import create_conn
 
