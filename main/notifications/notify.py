@@ -3,10 +3,7 @@ import datetime
 from telegram import Bot
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from databaseOperations.models import Notification, Birthdays
-
-engine = create_engine('postgresql://postgres:postgres@localhost:5432/addbirthday')
-Session = sessionmaker(bind=engine)
+from databaseOperations.models import Notification, Birthdays, get_session
 
 def send_notification(bot: Bot, notification: Notification, session):
     now = datetime.datetime.now()
@@ -24,7 +21,7 @@ def send_notification(bot: Bot, notification: Notification, session):
 
 def scheduler_for_notifications(bot_token: str):
     bot = Bot(bot_token)
-    session = Session()
+    session = get_session()
     while True:
         now = datetime.datetime.now()
         notifications = session.query(Notification).filter(Notification.notification_status == 'CREATED').all()

@@ -2,7 +2,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from pytz import utc
 from sqlalchemy import create_engine, text, and_
 from sqlalchemy.orm import sessionmaker
-from databaseOperations.models import Birthdays, Notification  # замените на имя вашего модуля
+from databaseOperations.models import Birthdays, Notification, get_session
 import datetime
 import threading
 
@@ -17,9 +17,7 @@ engine = create_engine('postgresql://postgres:postgres@localhost:5432/addbirthda
 Session = sessionmaker(bind=engine)
 
 def delete_notifications():
-    # Создайте новую сессию
-    session = Session()
-
+    session = get_session()
     try:
         # Найдите все удаленные записи в таблице birthdays, которые все еще запланированы
         deleted_birthdays = session.query(Birthdays).filter(and_(Birthdays.record_status=='DELETED', Birthdays.is_scheduled==True)).all()

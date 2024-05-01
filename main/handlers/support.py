@@ -2,15 +2,7 @@ from telegram import Update, ForceReply
 from telegram.ext import CallbackContext, CommandHandler, MessageHandler, Filters
 import psycopg2
 from datetime import datetime
-
-def create_conn():
-    conn = psycopg2.connect(
-        dbname="addbirthday",
-        user="postgres",
-        password="postgres",
-        host="localhost"
-    )
-    return conn
+from databaseOperations.models import create_conn
 
 def support_command(update: Update, context: CallbackContext) -> None:
     update.message.reply_text('1.Сделайте Reply/Ответить действие для этого сообщения. 2.Напишите и отправьте ваще обращение', reply_markup=ForceReply())

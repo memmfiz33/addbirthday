@@ -5,6 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from databaseOperations.models import Birthdays, Notification  # замените на имя вашего модуля
 import datetime
 import threading
+from databaseOperations.models import get_session
 
 # Создайте и настройте логгер
 import logging
@@ -13,13 +14,8 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Создайте подключение к базе данных
-engine = create_engine('postgresql://postgres:postgres@localhost:5432/addbirthday')  # замените на вашу строку подключения
-Session = sessionmaker(bind=engine)
-
 def create_notifications():
-    # Создайте новую сессию
-    session = Session()
-
+    session = get_session()
     try:
         # Найдите все активные записи в таблице birthdays
         active_birthdays = session.query(Birthdays).filter(and_(Birthdays.record_status=='ACTIVE', Birthdays.is_scheduled==False)).all()

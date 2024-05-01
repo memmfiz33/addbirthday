@@ -1,6 +1,6 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackContext
-from databaseOperations.addNewRecord import create_conn
+from databaseOperations.models import create_conn
 
 def delete_command(update: Update, context: CallbackContext) -> None:
     # Устанавливаем смещение в 0 только при вызове команды /delete

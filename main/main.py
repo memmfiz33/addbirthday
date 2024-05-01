@@ -2,9 +2,9 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, CallbackQueryH
 from handlers import start_command, addbirthday_command, info_command, handle_message, handle_button, delete_command
 from databaseOperations.showAll import showall_command
 from notifications.notify import scheduler_for_notifications
-from notifications.create_notifications import create_notifications  # импортируйте вашу функцию
-from notifications.delete_notifications import delete_notifications  # импортируйте вашу функцию
-from handlers.support import support_command, handle_support  # импортируйте обработчики команды /support
+from notifications.create_notifications import create_notifications
+from notifications.delete_notifications import delete_notifications
+from handlers.support import support_command, handle_support
 from typing import Final
 import threading
 import logging

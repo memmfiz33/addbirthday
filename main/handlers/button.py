@@ -3,7 +3,8 @@ from telegram.ext import CallbackContext
 from .addbirthday import addbirthday_command
 from .delete import delete_command
 from databaseOperations.showAll import showall_command
-from databaseOperations.addNewRecord import save_text, create_conn
+from databaseOperations.addNewRecord import save_text
+from databaseOperations.models import create_conn
 from .start import start_command  # Импортируем start_command из модуля start
 from .info import info_command  # Добавьте эту строку
 
