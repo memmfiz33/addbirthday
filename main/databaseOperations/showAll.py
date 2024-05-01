@@ -1,8 +1,7 @@
-import locale
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackContext
-from databaseOperations.addNewRecord import create_conn
-import psycopg2
+from .models import create_conn
+
 
 def showall_command(update: Update, context: CallbackContext) -> None:
     user_id = update.effective_user.id
