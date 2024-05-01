@@ -1,0 +1,40 @@
+2024-05-01 13:52:04,082 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-05-01 13:52:04,083 - apscheduler.scheduler - INFO - Added job "create_notifications" to job store "default"
+2024-05-01 13:52:04,083 - apscheduler.scheduler - INFO - Scheduler started
+2024-05-01 13:52:04,084 - apscheduler.scheduler - DEBUG - Looking for jobs to run
+2024-05-01 13:52:04,085 - apscheduler.scheduler - DEBUG - Next wakeup is due at 2024-05-01 10:53:04.081448+00:00 (in 59.996013 seconds)
+2024-05-01 13:52:04,087 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-05-01 13:52:04,114 - apscheduler.scheduler - INFO - Added job "delete_notifications" to job store "default"
+2024-05-01 13:52:04,115 - apscheduler.scheduler - INFO - Scheduler started
+2024-05-01 13:52:04,115 - apscheduler.scheduler - DEBUG - Looking for jobs to run
+2024-05-01 13:52:04,116 - apscheduler.scheduler - DEBUG - Next wakeup is due at 2024-05-01 10:53:04.086372+00:00 (in 59.969591 seconds)
+2024-05-01 13:52:04,117 - my_app - INFO - Starting bot....
+2024-05-01 13:52:04,118 - telegram.ext.dispatcher - DEBUG - Setting singleton dispatcher as <telegram.ext.dispatcher.Dispatcher object at 0x0000024F62303440>
+2024-05-01 13:52:04,123 - apscheduler.scheduler - INFO - Scheduler started
+2024-05-01 13:52:04,124 - apscheduler.scheduler - DEBUG - Looking for jobs to run
+2024-05-01 13:52:04,124 - telegram.bot - DEBUG - Entering: get_me
+2024-05-01 13:52:04,124 - apscheduler.scheduler - DEBUG - No jobs; waiting until a job is added
+2024-05-01 13:52:04,734 - telegram.bot - DEBUG - {'username': 'memmfiz01_bot', 'can_join_groups': True, 'supports_inline_queries': False, 'is_bot': True, 'id': 6948226088, 'can_read_all_group_messages': False, 'first_name': 'TortoBot 🎂'}
+2024-05-01 13:52:04,735 - telegram.bot - DEBUG - Exiting: get_me
+2024-05-01 13:52:04,735 - telegram.ext.updater - DEBUG - Bot:6948226088:dispatcher - started
+2024-05-01 13:52:04,736 - telegram.ext.updater - DEBUG - Bot:6948226088:updater - started
+2024-05-01 13:52:04,736 - telegram.ext.updater - DEBUG - Updater thread started (polling)
+2024-05-01 13:52:04,736 - telegram.ext.updater - DEBUG - Start network loop retry bootstrap del webhook
+2024-05-01 13:52:04,737 - telegram.ext.updater - DEBUG - Waiting for Dispatcher and polling to start
+2024-05-01 13:52:04,737 - telegram.ext.updater - DEBUG - Deleting webhook
+2024-05-01 13:52:04,738 - telegram.bot - DEBUG - Entering: delete_webhook
+2024-05-01 13:52:04,740 - telegram.ext.dispatcher - DEBUG - Dispatcher started
+2024-05-01 13:52:04,935 - telegram.bot - DEBUG - True
+2024-05-01 13:52:04,935 - telegram.bot - DEBUG - Exiting: delete_webhook
+2024-05-01 13:52:04,935 - telegram.ext.updater - DEBUG - Bootstrap done
+2024-05-01 13:52:04,935 - telegram.ext.updater - DEBUG - Start network loop retry getting Updates
+2024-05-01 13:52:04,935 - telegram.bot - DEBUG - Entering: get_updates
+2024-05-01 13:52:06,093 - telegram.ext.updater - INFO - Received signal 2 (SIGINT), stopping...
+2024-05-01 13:52:06,093 - apscheduler.scheduler - INFO - Scheduler has been shut down
+2024-05-01 13:52:06,093 - apscheduler.scheduler - DEBUG - Looking for jobs to run
+2024-05-01 13:52:06,093 - apscheduler.scheduler - DEBUG - No jobs; waiting until a job is added
+2024-05-01 13:52:06,094 - telegram.ext.updater - DEBUG - Stopping Updater and Dispatcher...
+2024-05-01 13:52:06,094 - telegram.ext.updater - DEBUG - Requesting Dispatcher to stop...
+2024-05-01 13:52:06,766 - telegram.ext.dispatcher - DEBUG - orderly stopping
+2024-05-01 13:52:06,766 - telegram.ext.dispatcher - DEBUG - Dispatcher thread stopped
+2024-05-01 13:52:06,767 - telegram.ext.updater - DEBUG - Bot:6948226088:dispatcher - ended

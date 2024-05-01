@@ -2,6 +2,7 @@ from telegram import Update
 from telegram.ext import CallbackContext
 from databaseOperations.models import create_conn
 
+
 def addbirthday_command(update: Update, context: CallbackContext) -> None:
     conn = create_conn()
     cur = conn.cursor()

@@ -1,0 +1,99 @@
+2024-05-01 13:53:29,418 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-05-01 13:53:29,420 - apscheduler.scheduler - INFO - Added job "create_notifications" to job store "default"
+2024-05-01 13:53:29,420 - apscheduler.scheduler - INFO - Scheduler started
+2024-05-01 13:53:29,420 - apscheduler.scheduler - DEBUG - Looking for jobs to run
+2024-05-01 13:53:29,421 - apscheduler.scheduler - DEBUG - Next wakeup is due at 2024-05-01 10:54:29.418482+00:00 (in 59.996991 seconds)
+2024-05-01 13:53:29,425 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-05-01 13:53:29,426 - apscheduler.scheduler - INFO - Added job "delete_notifications" to job store "default"
+2024-05-01 13:53:29,426 - apscheduler.scheduler - INFO - Scheduler started
+2024-05-01 13:53:29,427 - apscheduler.scheduler - DEBUG - Looking for jobs to run
+2024-05-01 13:53:29,427 - apscheduler.scheduler - DEBUG - Next wakeup is due at 2024-05-01 10:54:29.424210+00:00 (in 59.996860 seconds)
+2024-05-01 13:53:29,428 - my_app - INFO - Starting bot....
+2024-05-01 13:53:29,429 - telegram.ext.dispatcher - DEBUG - Setting singleton dispatcher as <telegram.ext.dispatcher.Dispatcher object at 0x0000029A7E3035E0>
+2024-05-01 13:53:29,434 - apscheduler.scheduler - INFO - Scheduler started
+2024-05-01 13:53:29,435 - apscheduler.scheduler - DEBUG - Looking for jobs to run
+2024-05-01 13:53:29,435 - apscheduler.scheduler - DEBUG - No jobs; waiting until a job is added
+2024-05-01 13:53:29,436 - telegram.bot - DEBUG - Entering: get_me
+2024-05-01 13:53:30,044 - telegram.bot - DEBUG - {'can_join_groups': True, 'supports_inline_queries': False, 'username': 'memmfiz01_bot', 'first_name': 'TortoBot 🎂', 'can_read_all_group_messages': False, 'is_bot': True, 'id': 6948226088}
+2024-05-01 13:53:30,044 - telegram.bot - DEBUG - Exiting: get_me
+2024-05-01 13:53:30,045 - telegram.ext.updater - DEBUG - Bot:6948226088:dispatcher - started
+2024-05-01 13:53:30,045 - telegram.ext.updater - DEBUG - Bot:6948226088:updater - started
+2024-05-01 13:53:30,046 - telegram.ext.updater - DEBUG - Waiting for Dispatcher and polling to start
+2024-05-01 13:53:30,046 - telegram.ext.updater - DEBUG - Updater thread started (polling)
+2024-05-01 13:53:30,046 - telegram.ext.updater - DEBUG - Start network loop retry bootstrap del webhook
+2024-05-01 13:53:30,047 - telegram.ext.updater - DEBUG - Deleting webhook
+2024-05-01 13:53:30,047 - telegram.bot - DEBUG - Entering: delete_webhook
+2024-05-01 13:53:30,048 - telegram.ext.dispatcher - DEBUG - Dispatcher started
+2024-05-01 13:53:30,245 - telegram.bot - DEBUG - True
+2024-05-01 13:53:30,245 - telegram.bot - DEBUG - Exiting: delete_webhook
+2024-05-01 13:53:30,246 - telegram.ext.updater - DEBUG - Bootstrap done
+2024-05-01 13:53:30,246 - telegram.ext.updater - DEBUG - Start network loop retry getting Updates
+2024-05-01 13:53:30,246 - telegram.bot - DEBUG - Entering: get_updates
+2024-05-01 13:53:38,485 - telegram.bot - DEBUG - Getting updates: [681526651]
+2024-05-01 13:53:38,486 - telegram.bot - DEBUG - [<telegram.update.Update object at 0x0000029A7E4EC940>]
+2024-05-01 13:53:38,486 - telegram.bot - DEBUG - Exiting: get_updates
+2024-05-01 13:53:38,487 - telegram.bot - DEBUG - Entering: get_updates
+2024-05-01 13:53:38,487 - telegram.ext.dispatcher - DEBUG - Processing Update: {'update_id': 681526651, 'message': {'chat': {'username': 'memmfiz', 'first_name': 'Владимир', 'id': 319661378, 'last_name': 'Моисеев', 'type': 'private'}, 'new_chat_photo': [], 'photo': [], 'group_chat_created': False, 'channel_chat_created': False, 'delete_chat_photo': False, 'new_chat_members': [], 'message_id': 3629, 'text': '/support', 'caption_entities': [], 'supergroup_chat_created': False, 'entities': [{'length': 8, 'type': 'bot_command', 'offset': 0}], 'date': 1714560821, 'from': {'language_code': 'en', 'username': 'memmfiz', 'first_name': 'Владимир', 'last_name': 'Моисеев', 'is_bot': False, 'id': 319661378}}}
+2024-05-01 13:53:38,489 - telegram.bot - DEBUG - Entering: send_message
+2024-05-01 13:53:39,159 - telegram.bot - DEBUG - {'chat': {'username': 'memmfiz', 'first_name': 'Владимир', 'id': 319661378, 'last_name': 'Моисеев', 'type': 'private'}, 'new_chat_photo': [], 'photo': [], 'group_chat_created': False, 'channel_chat_created': False, 'delete_chat_photo': False, 'new_chat_members': [], 'message_id': 3630, 'text': '1.Сделайте Reply/Ответить действие для этого сообщения. 2.Напишите и отправьте ваще обращение', 'caption_entities': [], 'supergroup_chat_created': False, 'entities': [], 'date': 1714560822, 'from': {'username': 'memmfiz01_bot', 'first_name': 'TortoBot 🎂', 'is_bot': True, 'id': 6948226088}}
+2024-05-01 13:53:39,159 - telegram.bot - DEBUG - Exiting: send_message
+2024-05-01 13:53:48,189 - telegram.bot - DEBUG - Getting updates: [681526652]
+2024-05-01 13:53:48,190 - telegram.bot - DEBUG - [<telegram.update.Update object at 0x0000029A7E4EC880>]
+2024-05-01 13:53:48,190 - telegram.bot - DEBUG - Exiting: get_updates
+2024-05-01 13:53:48,190 - telegram.bot - DEBUG - Entering: get_updates
+2024-05-01 13:53:48,190 - telegram.ext.dispatcher - DEBUG - Processing Update: {'update_id': 681526652, 'message': {'chat': {'username': 'memmfiz', 'first_name': 'Владимир', 'id': 319661378, 'last_name': 'Моисеев', 'type': 'private'}, 'new_chat_photo': [], 'photo': [], 'group_chat_created': False, 'channel_chat_created': False, 'delete_chat_photo': False, 'new_chat_members': [], 'message_id': 3631, 'text': 'Прувет', 'reply_to_message': {'chat': {'username': 'memmfiz', 'first_name': 'Владимир', 'id': 319661378, 'last_name': 'Моисеев', 'type': 'private'}, 'new_chat_photo': [], 'photo': [], 'group_chat_created': False, 'channel_chat_created': False, 'delete_chat_photo': False, 'new_chat_members': [], 'message_id': 3630, 'text': '1.Сделайте Reply/Ответить действие для этого сообщения. 2.Напишите и отправьте ваще обращение', 'caption_entities': [], 'supergroup_chat_created': False, 'entities': [], 'date': 1714560822, 'from': {'username': 'memmfiz01_bot', 'first_name': 'TortoBot 🎂', 'is_bot': True, 'id': 6948226088}}, 'caption_entities': [], 'supergroup_chat_created': False, 'entities': [], 'date': 1714560831, 'from': {'language_code': 'en', 'username': 'memmfiz', 'first_name': 'Владимир', 'last_name': 'Моисеев', 'is_bot': False, 'id': 319661378}}}
+2024-05-01 13:53:48,306 - telegram.bot - DEBUG - Entering: send_message
+2024-05-01 13:53:48,636 - telegram.bot - DEBUG - {'chat': {'username': 'memmfiz', 'first_name': 'Владимир', 'id': 319661378, 'last_name': 'Моисеев', 'type': 'private'}, 'new_chat_photo': [], 'photo': [], 'group_chat_created': False, 'channel_chat_created': False, 'delete_chat_photo': False, 'new_chat_members': [], 'message_id': 3632, 'text': 'Спасибо за обращение!', 'caption_entities': [], 'supergroup_chat_created': False, 'entities': [], 'date': 1714560831, 'from': {'username': 'memmfiz01_bot', 'first_name': 'TortoBot 🎂', 'is_bot': True, 'id': 6948226088}}
+2024-05-01 13:53:48,636 - telegram.bot - DEBUG - Exiting: send_message
+2024-05-01 13:53:58,388 - telegram.bot - DEBUG - No new updates found.
+2024-05-01 13:53:58,389 - telegram.bot - DEBUG - []
+2024-05-01 13:53:58,389 - telegram.bot - DEBUG - Exiting: get_updates
+2024-05-01 13:53:58,389 - telegram.bot - DEBUG - Entering: get_updates
+2024-05-01 13:54:08,589 - telegram.bot - DEBUG - No new updates found.
+2024-05-01 13:54:08,589 - telegram.bot - DEBUG - []
+2024-05-01 13:54:08,589 - telegram.bot - DEBUG - Exiting: get_updates
+2024-05-01 13:54:08,589 - telegram.bot - DEBUG - Entering: get_updates
+2024-05-01 13:54:18,790 - telegram.bot - DEBUG - No new updates found.
+2024-05-01 13:54:18,790 - telegram.bot - DEBUG - []
+2024-05-01 13:54:18,790 - telegram.bot - DEBUG - Exiting: get_updates
+2024-05-01 13:54:18,791 - telegram.bot - DEBUG - Entering: get_updates
+2024-05-01 13:54:28,989 - telegram.bot - DEBUG - No new updates found.
+2024-05-01 13:54:28,989 - telegram.bot - DEBUG - []
+2024-05-01 13:54:28,991 - telegram.bot - DEBUG - Exiting: get_updates
+2024-05-01 13:54:28,991 - telegram.bot - DEBUG - Entering: get_updates
+2024-05-01 13:54:29,429 - apscheduler.scheduler - DEBUG - Looking for jobs to run
+2024-05-01 13:54:29,429 - apscheduler.scheduler - DEBUG - Looking for jobs to run
+2024-05-01 13:54:29,432 - apscheduler.executors.default - INFO - Running job "create_notifications (trigger: interval[0:01:00], next run at: 2024-05-01 10:54:29 UTC)" (scheduled at 2024-05-01 10:54:29.418482+00:00)
+2024-05-01 13:54:29,434 - apscheduler.scheduler - DEBUG - Next wakeup is due at 2024-05-01 10:55:29.418482+00:00 (in 59.987638 seconds)
+2024-05-01 13:54:29,436 - apscheduler.executors.default - INFO - Running job "delete_notifications (trigger: interval[0:01:00], next run at: 2024-05-01 10:54:29 UTC)" (scheduled at 2024-05-01 10:54:29.424210+00:00)
+2024-05-01 13:54:29,438 - apscheduler.scheduler - DEBUG - Next wakeup is due at 2024-05-01 10:55:29.424210+00:00 (in 59.993366 seconds)
+2024-05-01 13:54:29,438 - apscheduler.executors.default - INFO - Job "create_notifications (trigger: interval[0:01:00], next run at: 2024-05-01 10:55:29 UTC)" executed successfully
+2024-05-01 13:54:29,440 - apscheduler.executors.default - INFO - Job "delete_notifications (trigger: interval[0:01:00], next run at: 2024-05-01 10:55:29 UTC)" executed successfully
+2024-05-01 13:54:39,192 - telegram.bot - DEBUG - No new updates found.
+2024-05-01 13:54:39,192 - telegram.bot - DEBUG - []
+2024-05-01 13:54:39,192 - telegram.bot - DEBUG - Exiting: get_updates
+2024-05-01 13:54:39,192 - telegram.bot - DEBUG - Entering: get_updates
+2024-05-01 13:54:42,998 - telegram.ext.updater - INFO - Received signal 2 (SIGINT), stopping...
+2024-05-01 13:54:42,998 - apscheduler.scheduler - INFO - Scheduler has been shut down
+2024-05-01 13:54:42,998 - apscheduler.scheduler - DEBUG - Looking for jobs to run
+2024-05-01 13:54:42,999 - apscheduler.scheduler - DEBUG - No jobs; waiting until a job is added
+2024-05-01 13:54:42,999 - telegram.ext.updater - DEBUG - Stopping Updater and Dispatcher...
+2024-05-01 13:54:42,999 - telegram.ext.updater - DEBUG - Requesting Dispatcher to stop...
+2024-05-01 13:54:43,064 - telegram.ext.dispatcher - DEBUG - orderly stopping
+2024-05-01 13:54:43,064 - telegram.ext.dispatcher - DEBUG - Dispatcher thread stopped
+2024-05-01 13:54:43,064 - telegram.ext.updater - DEBUG - Bot:6948226088:dispatcher - ended
+2024-05-01 13:54:43,110 - telegram.ext.dispatcher - DEBUG - Waiting for async thread 1/4 to end
+2024-05-01 13:54:43,110 - telegram.ext.dispatcher - DEBUG - Closing run_async thread Bot:6948226088:worker:4d468826-4570-4b43-ae62-d173a0b7bdf7_0/4
+2024-05-01 13:54:43,110 - telegram.ext.dispatcher - DEBUG - Closing run_async thread Bot:6948226088:worker:4d468826-4570-4b43-ae62-d173a0b7bdf7_3/4
+2024-05-01 13:54:43,110 - telegram.ext.dispatcher - DEBUG - Closing run_async thread Bot:6948226088:worker:4d468826-4570-4b43-ae62-d173a0b7bdf7_1/4
+2024-05-01 13:54:43,110 - telegram.ext.dispatcher - DEBUG - Closing run_async thread Bot:6948226088:worker:4d468826-4570-4b43-ae62-d173a0b7bdf7_2/4
+2024-05-01 13:54:43,111 - telegram.ext.dispatcher - DEBUG - async thread 1/4 has ended
+2024-05-01 13:54:43,111 - telegram.ext.dispatcher - DEBUG - Waiting for async thread 2/4 to end
+2024-05-01 13:54:43,112 - telegram.ext.dispatcher - DEBUG - async thread 2/4 has ended
+2024-05-01 13:54:43,112 - telegram.ext.dispatcher - DEBUG - Waiting for async thread 3/4 to end
+2024-05-01 13:54:43,112 - telegram.ext.dispatcher - DEBUG - async thread 3/4 has ended
+2024-05-01 13:54:43,112 - telegram.ext.dispatcher - DEBUG - Waiting for async thread 4/4 to end
+2024-05-01 13:54:43,112 - telegram.ext.dispatcher - DEBUG - async thread 4/4 has ended
+2024-05-01 13:54:43,112 - telegram.ext.updater - DEBUG - Waiting for Bot:6948226088:dispatcher thread to end
+2024-05-01 13:54:43,112 - telegram.ext.updater - DEBUG - Bot:6948226088:dispatcher thread has ended
+2024-05-01 13:54:43,112 - telegram.ext.updater - DEBUG - Waiting for Bot:6948226088:updater thread to end
