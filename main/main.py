@@ -5,11 +5,14 @@ from notifications.notify import scheduler_for_notifications
 from notifications.create_notifications import create_notifications
 from notifications.delete_notifications import delete_notifications
 from handlers.support import support_command, handle_support
-from typing import Final
+from dotenv import load_dotenv
 import threading
 import logging
+import os
 
-TOKEN: Final = '6948226088:AAEotmW-2QhzP4SyzIz0biORxpB-0nv4nkY'
+load_dotenv()
+
+TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
