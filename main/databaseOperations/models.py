@@ -1,7 +1,17 @@
 from sqlalchemy import Column, Integer, String, DateTime, Text, Boolean, TIMESTAMP
 from sqlalchemy.ext.declarative import declarative_base
+import psycopg2
 
 Base = declarative_base()
+
+def create_conn():
+    conn = psycopg2.connect(
+        dbname="addbirthday",
+        user="postgres",
+        password="postgres",
+        host="localhost"
+    )
+    return conn
 
 class Notification(Base):
     __tablename__ = 'notifications'

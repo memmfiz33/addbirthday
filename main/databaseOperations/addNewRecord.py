@@ -1,14 +1,6 @@
 import psycopg2
 from datetime import datetime
-
-def create_conn():
-    conn = psycopg2.connect(
-        dbname="addbirthday",
-        user="postgres",
-        password="postgres",
-        host="localhost"
-    )
-    return conn
+from .models import create_conn
 
 def save_text(user_id: int, first_name: str, last_name: str, username: str, messages: dict) -> None:
     conn = create_conn()
