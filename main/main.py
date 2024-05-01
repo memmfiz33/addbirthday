@@ -5,6 +5,7 @@ from notifications.notify import scheduler_for_notifications
 from notifications.create_notifications import create_notifications
 from notifications.delete_notifications import delete_notifications
 from handlers.support import support_command, handle_support
+from logger.logger import logger
 from dotenv import load_dotenv
 import threading
 import logging
@@ -18,7 +19,7 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 def main() -> None:
-    logging.info('Starting bot....')
+    logger.info('Starting bot....')
     updater = Updater(TOKEN, use_context=True)
     dp = updater.dispatcher
     dp.add_handler(CommandHandler('start', start_command))
