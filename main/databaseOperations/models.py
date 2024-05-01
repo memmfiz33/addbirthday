@@ -47,7 +47,7 @@ class Notification(Base):
 class Birthdays(Base):
     __tablename__ = 'birthdays'
 
-    id = Column(Integer, primary_key=True)  # Добавьте знак равенства (=)
+    id = Column(Integer, primary_key=True)
     user_name = Column(Text)
     user_telegram_id = Column(Integer)
     user_telegram_name = Column(Text)
