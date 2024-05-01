@@ -2,13 +2,10 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from pytz import utc
 from sqlalchemy import create_engine, text, and_
 from databaseOperations.models import Birthdays, Notification  # замените на имя вашего модуля
-from logger import logger
+from logger.logger import logger
 import datetime
 import threading
 from databaseOperations.models import get_session
-
-# Импортируйте настроенный логгер
-from logger.logger import logger
 
 # Создайте подключение к базе данных
 def create_notifications():
