@@ -4,6 +4,7 @@ from databaseOperations.showAll import showall_command
 from notifications.notify import scheduler_for_notifications
 from notifications.create_notifications import create_notifications  # импортируйте вашу функцию
 from notifications.delete_notifications import delete_notifications  # импортируйте вашу функцию
+from handlers.support import support_command, handle_support  # импортируйте обработчики команды /support
 from typing import Final
 import threading
 import logging
@@ -22,6 +23,8 @@ def main() -> None:
     dp.add_handler(CommandHandler('info', info_command))
     dp.add_handler(CommandHandler('showall', showall_command))
     dp.add_handler(CommandHandler('delete', delete_command))
+    dp.add_handler(CommandHandler('support', support_command))  # добавьте обработчик команды /support
+    dp.add_handler(MessageHandler(Filters.text & Filters.reply, handle_support))  # добавьте обработчик ответа на команду /support
     dp.add_handler(CallbackQueryHandler(handle_button))
     dp.add_handler(MessageHandler(Filters.text & (~Filters.command), handle_message))
  # нотификации
