@@ -6,9 +6,6 @@ import datetime
 import threading
 from databaseOperations.models import get_session
 
-# Импортируйте настроенный логгер
-from logger.logger import logger
-
 # Создайте подключение к базе данных
 def create_notifications():
     session = get_session()
@@ -17,9 +14,6 @@ def create_notifications():
         active_birthdays = session.query(Birthdays).filter(and_(Birthdays.record_status=='ACTIVE', Birthdays.is_scheduled==False)).all()
 
         for birthday in active_birthdays:
-            # Логируем информацию о записи перед созданием даты
-            logger.info(f'Processing birthday {birthday.id} with date {birthday.birth_date}')
-
             # Получите текущую дату и время
             now = datetime.datetime.now()
 
@@ -46,7 +40,6 @@ def create_notifications():
                         scheduled_time = now.replace(year=now.year, month=birthday.birth_date.month, day=birthday.birth_date.day,
                                                      hour=9, minute=0, second=0)
             except Exception as e:
-                logger.error(f'Error processing birthday {birthday.id}: {e}')
                 continue
 
             # Создайте новую запись в таблице notifications
@@ -76,10 +69,8 @@ def create_notifications():
 
             # Сохраните изменения
             session.commit()
-
-            logger.info(f'Notification created for birthday {birthday.id}')
     except Exception as e:
-        logger.error(f'Error in create_notifications: {e}')
+        pass
     finally:
         # Закройте сессию
         session.close()
