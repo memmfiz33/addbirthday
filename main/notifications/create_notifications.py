@@ -40,11 +40,11 @@ def create_notifications():
                     # Если дата рождения уже прошла в этом году, установите scheduled_time на следующий год
                     if now > birth_date_this_year:
                         scheduled_time = now.replace(year=now.year + 1, month=birthday.birth_date.month, day=birthday.birth_date.day,
-                                                     hour=9, minute=0, second=0)
+                                                     hour=7, minute=0, second=0)
                     # В противном случае установите scheduled_time на текущий год
                     else:
                         scheduled_time = now.replace(year=now.year, month=birthday.birth_date.month, day=birthday.birth_date.day,
-                                                     hour=9, minute=0, second=0)
+                                                     hour=7, minute=0, second=0)
             except Exception as e:
                 logger.error(f'Error processing birthday {birthday.id}: {e}')
                 continue
