@@ -1,61 +1,65 @@
 import logging
-import boto3
 import os
-from botocore.exceptions import NoCredentialsError
 import datetime
+import atexit
 
 # Отключите логи от urllib3
 logging.getLogger('urllib3').setLevel(logging.WARNING)
-# Отключите логи от botocore
-logging.getLogger('botocore').setLevel(logging.WARNING)
 
 # Создайте объект logger с именем вашего приложения
 logger = logging.getLogger('my_app')
 logger.setLevel(logging.DEBUG)
 
-# Получите ключи доступа из переменных окружения
-aws_access_key = os.getenv('AWS_ACCESS_KEY')
-aws_secret_key = os.getenv('AWS_SECRET_KEY')
-
-# Создайте клиент boto3 для работы с Yandex Object Storage
-s3 = boto3.client('s3',
-                  endpoint_url='https://storage.yandexcloud.net',
-                  aws_access_key_id=aws_access_key,
-                  aws_secret_access_key=aws_secret_key)
-
-# Создайте обработчик, который записывает сообщения лога в Object Storage
-class S3Handler(logging.Handler):
+# Создайте обработчик, который записывает сообщения лога в файл
+class FileHandler(logging.Handler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.start_time = datetime.datetime.now()
-        self.filename = self.start_time.strftime("%d%m%Y-%H-%M-%S.txt")
-        self.log_data = ""
+        self.session_number = self.get_session_number()
+        self.filename = f"logger/logs/{str(self.session_number).zfill(4)}_{self.start_time.strftime('%d%m%Y-%H-%M-%S')}.txt"
+        self.log_count = 0
+        self.internal_logger = logging.getLogger('FileHandler')
+        self.internal_logger.addHandler(logging.StreamHandler())
+        atexit.register(self.close_file)
 
-        # Создайте файл сразу после старта приложения
-        s3.put_object(Bucket='memmfiz-logs-01', Key='logs/' + self.filename, Body=self.log_data)
-        logger.info("Successfully created log file on Yandex Object Storage")
+    def get_session_number(self):
+        try:
+            with open('logger/logs/session_number.txt', 'r') as f:
+                session_number = int(f.read().strip())
+        except FileNotFoundError:
+            session_number = 0
+        session_number += 1
+        with open('logger/logs/session_number.txt', 'w') as f:
+            f.write(str(session_number))
+        return session_number
 
     def emit(self, record):
         log_entry = self.format(record)
         try:
-            # Если прошло более 24 часов с начала сессии, начните новую сессию
             if datetime.datetime.now() - self.start_time > datetime.timedelta(hours=24):
                 self.start_time = datetime.datetime.now()
-                self.filename = self.start_time.strftime("%d%m%Y-%H-%M-%S.txt")
-                self.log_data = ""
+                self.session_number = self.get_session_number()
+                self.filename = f"logger/logs/{str(self.session_number).zfill(4)}_{self.start_time.strftime('%d%m%Y-%H-%M-%S')}.txt"
+                self.log_count = 0
 
-            # Добавьте новую запись к существующим данным
-            self.log_data += log_entry + "\n"
-
-            # Загрузите данные на S3 каждые 100 записей
-            if len(self.log_data.split("\n")) >= 100:
-                s3.put_object(Bucket='memmfiz-logs-01', Key='logs/' + self.filename, Body=self.log_data)
-                self.log_data = ""
-                logger.info("Successfully uploaded logs to Yandex Object Storage")
+            with open(self.filename, 'a', encoding='utf-8') as f:  # Добавьте кодировку 'utf-8' здесь
+                f.write(log_entry + "\n")
+            self.log_count += 1
         except Exception as e:
-            logger.error(f"Error writing to Yandex Object Storage: {e}")
+            self.internal_logger.error(f"Error writing to file: {e}")
 
-handler = S3Handler()
+    def close_file(self):
+        try:
+            with open(self.filename, 'a') as f:
+                f.close()
+            self.internal_logger.info("Successfully closed log file")
+        except Exception as e:
+            self.internal_logger.error(f"Error closing log file: {e}")
+
+if not os.path.exists('logger/logs'):
+    os.makedirs('logger/logs')
+
+handler = FileHandler()
 handler.setLevel(logging.DEBUG)
 
 # Создайте форматтер, который добавляет время, имя и уровень в каждое сообщение лога
