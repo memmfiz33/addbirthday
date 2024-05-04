@@ -1,25 +1,32 @@
 import logging
+import boto3
 import os
-from datetime import datetime
+from botocore.exceptions import NoCredentialsError
 
 # Создайте объект logger с именем вашего приложения
 logger = logging.getLogger('my_app')
 logger.setLevel(logging.DEBUG)
 
-# Получите текущую дату и время
-now = datetime.now()
+# Получите ключи доступа из переменных окружения
+aws_access_key = os.getenv('AWS_ACCESS_KEY')
+aws_secret_key = os.getenv('AWS_SECRET_KEY')
 
-# Создайте уникальное имя файла с текущей датой и временем
-filename = f'logs{now.strftime("%Y%m%d")}-{now.strftime("%H-%M-%S")}.log'
+# Создайте клиент boto3 для работы с Yandex Object Storage
+s3 = boto3.client('s3',
+                  endpoint_url='https://storage.yandexcloud.net',
+                  aws_access_key_id=aws_access_key,
+                  aws_secret_access_key=aws_secret_key)
 
-# Создайте путь к файлу лога
-log_path = os.path.join('logger', 'logs', filename)
+# Создайте обработчик, который записывает сообщения лога в Object Storage
+class S3Handler(logging.Handler):
+    def emit(self, record):
+        log_entry = self.format(record)
+        try:
+            s3.put_object(Bucket='memmfiz-logs-01', Key='logs/log.txt', Body=log_entry)
+        except NoCredentialsError:
+            print("No credentials to access Yandex Object Storage")
 
-# Создайте путь к папке лога, если он еще не существует
-os.makedirs(os.path.dirname(log_path), exist_ok=True)
-
-# Создайте обработчик, который записывает сообщения лога в файл
-handler = logging.FileHandler(log_path, encoding='utf-8')  # Добавьте аргумент encoding='utf-8'
+handler = S3Handler()
 handler.setLevel(logging.DEBUG)
 
 # Создайте форматтер, который добавляет время, имя и уровень в каждое сообщение лога

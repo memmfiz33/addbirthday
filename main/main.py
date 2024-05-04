@@ -1,6 +1,5 @@
 import sys
 sys.path.append('/home/memmfiz_admin/addbirthday/main')
-
 from telegram.ext import Updater, CommandHandler, MessageHandler, CallbackQueryHandler, Filters
 from handlers import start_command, addbirthday_command, info_command, handle_message, handle_button, delete_command
 from databaseOperations.showAll import showall_command
@@ -10,10 +9,9 @@ from notifications.delete_notifications import delete_notifications
 from handlers.support import support_command, handle_support
 from logger.logger import logger  # Импортируйте настроенный логгер
 from dotenv import load_dotenv
+load_dotenv()
 import threading
 import os
-
-load_dotenv()
 
 TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 
