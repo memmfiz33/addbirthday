@@ -1,4 +1,3 @@
 # .gitignore
 .env
-.gitignore
-logger/logs
+logger/logs*
