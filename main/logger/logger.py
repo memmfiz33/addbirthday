@@ -2,6 +2,12 @@ import logging
 import boto3
 import os
 from botocore.exceptions import NoCredentialsError
+import datetime
+
+# Отключите логи от urllib3
+logging.getLogger('urllib3').setLevel(logging.WARNING)
+# Отключите логи от botocore
+logging.getLogger('botocore').setLevel(logging.WARNING)
 
 # Создайте объект logger с именем вашего приложения
 logger = logging.getLogger('my_app')
@@ -19,10 +25,28 @@ s3 = boto3.client('s3',
 
 # Создайте обработчик, который записывает сообщения лога в Object Storage
 class S3Handler(logging.Handler):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.start_time = datetime.datetime.now()
+        self.filename = self.start_time.strftime("%d%m%Y-%H-%M-%S.txt")
+        self.log_data = ""
+
     def emit(self, record):
         log_entry = self.format(record)
         try:
-            s3.put_object(Bucket='memmfiz-logs-01', Key='logs/log.txt', Body=log_entry)
+            # Если прошло более 24 часов с начала сессии, начните новую сессию
+            if datetime.datetime.now() - self.start_time > datetime.timedelta(hours=24):
+                self.start_time = datetime.datetime.now()
+                self.filename = self.start_time.strftime("%d%m%Y-%H-%M-%S.txt")
+                self.log_data = ""
+
+            # Добавьте новую запись к существующим данным
+            self.log_data += log_entry + "\n"
+
+            # Загрузите данные на S3 каждые 100 записей
+            if len(self.log_data.split("\n")) >= 100:
+                s3.put_object(Bucket='memmfiz-logs-01', Key='logs/' + self.filename, Body=self.log_data)
+                self.log_data = ""
         except NoCredentialsError:
             print("No credentials to access Yandex Object Storage")
 
