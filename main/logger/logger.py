@@ -31,6 +31,10 @@ class S3Handler(logging.Handler):
         self.filename = self.start_time.strftime("%d%m%Y-%H-%M-%S.txt")
         self.log_data = ""
 
+        # Создайте файл сразу после старта приложения
+        s3.put_object(Bucket='memmfiz-logs-01', Key='logs/' + self.filename, Body=self.log_data)
+        logger.info("Successfully created log file on Yandex Object Storage")
+
     def emit(self, record):
         log_entry = self.format(record)
         try:
@@ -47,8 +51,9 @@ class S3Handler(logging.Handler):
             if len(self.log_data.split("\n")) >= 100:
                 s3.put_object(Bucket='memmfiz-logs-01', Key='logs/' + self.filename, Body=self.log_data)
                 self.log_data = ""
-        except NoCredentialsError:
-            print("No credentials to access Yandex Object Storage")
+                logger.info("Successfully uploaded logs to Yandex Object Storage")
+        except Exception as e:
+            logger.error(f"Error writing to Yandex Object Storage: {e}")
 
 handler = S3Handler()
 handler.setLevel(logging.DEBUG)
