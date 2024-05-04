@@ -47,6 +47,7 @@ class FileHandler(logging.Handler):
             self.log_count += 1
         except Exception as e:
             self.internal_logger.error(f"Error writing to file: {e}")
+            raise e  # Добавлено: повторно поднимаем исключение, чтобы увидеть его в консоли
 
     def close_file(self):
         try:
@@ -55,6 +56,7 @@ class FileHandler(logging.Handler):
             self.internal_logger.info("Successfully closed log file")
         except Exception as e:
             self.internal_logger.error(f"Error closing log file: {e}")
+            raise e  # Добавлено: повторно поднимаем исключение, чтобы увидеть его в консоли
 
 if not os.path.exists('logger/logs'):
     os.makedirs('logger/logs')
