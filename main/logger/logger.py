@@ -48,6 +48,7 @@ class FileHandler(logging.Handler):
             with open(self.filename, 'a', encoding='utf-8') as f:  # Добавьте кодировку 'utf-8' здесь
                 f.write(log_entry + "\n")
             self.log_count += 1
+            self.internal_logger.info(f"Successfully wrote to file: {self.filename}")
         except Exception as e:
             self.internal_logger.error(f"Error writing to file: {e}")
             raise e  # Добавлено: повторно поднимаем исключение, чтобы увидеть его в консоли
