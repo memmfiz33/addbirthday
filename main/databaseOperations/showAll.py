@@ -1,6 +1,12 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackContext
 from .models import create_conn
+import html
+
+
+def escape_html(text):
+    # Экранировать специальные символы HTML
+    return html.escape(text)
 
 
 def showall_command(update: Update, context: CallbackContext) -> None:
@@ -10,14 +16,13 @@ def showall_command(update: Update, context: CallbackContext) -> None:
 
     cur.execute("""
     SELECT 
-        b.id AS "Номер записи",
-        b.birth_date AS "Дата рождения",
-        b.birth_person AS "Имя именинника",
-        b.sex AS "Пол"
+        b.birth_date,
+        b.birth_person,
+        COALESCE(b.sex, '-') -- Если пол отсутствует, заменяем на дефис
     FROM birthdays b
     WHERE user_telegram_id = %s
     AND record_status = 'ACTIVE'
-    ORDER BY b.id DESC
+    ORDER BY SUBSTR(birth_date::text, 6, 5), SUBSTR(birth_date::text, 1, 5) DESC
     LIMIT 40
     """, (user_id,))
 
@@ -25,9 +30,10 @@ def showall_command(update: Update, context: CallbackContext) -> None:
     cur.close()
     conn.close()
 
-    response = 'ID | Дата рождения | Имя именинника | Пол\n'
+    # Разделительная линия между оглавлением и таблицей
+    header_separator = "===============================\n"
+    entry_separator = ""
 
-    # Словарь для перевода названий месяцев
     months = {
         "January": "ЯНВ",
         "February": "ФЕВ",
@@ -43,14 +49,18 @@ def showall_command(update: Update, context: CallbackContext) -> None:
         "December": "ДЕК",
     }
 
-    for row in results:
-        # Форматирование даты с учетом условий
-        if row[1].year >= 1901:
-            formatted_date = f"{row[1].day} {months[row[1].strftime('%B')]} {row[1].year}"
-        else:
-            formatted_date = f"{row[1].day} {months[row[1].strftime('%B')]}"
+    response = header_separator
+    response += "Дата рождения, Имя именинника, Пол\n"
+    response += header_separator
 
-        response += f"{row[0]} | {formatted_date} | {row[2]} | {row[3]}\n"
+    for row in results:
+        if row[0].year >= 1901:
+            formatted_date = f"{row[0].day:02d} {months[row[0].strftime('%B')]} {row[0].year}"
+        else:
+            formatted_date = f"{row[0].day:02d} {months[row[0].strftime('%B')]}"
+
+        # Формирование строки ответа в соответствии с предложенным форматом
+        response += f"{escape_html(formatted_date)}, {escape_html(row[1])}, {escape_html(row[2])}\n"
 
     keyboard = [
         [InlineKeyboardButton('Отмена', callback_data='start')]
