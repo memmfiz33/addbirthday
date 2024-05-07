@@ -30,10 +30,6 @@ def showall_command(update: Update, context: CallbackContext) -> None:
     cur.close()
     conn.close()
 
-    # Разделительная линия между оглавлением и таблицей
-    header_separator = "===============================\n"
-    entry_separator = ""
-
     months = {
         "January": "ЯНВ",
         "February": "ФЕВ",
@@ -49,15 +45,21 @@ def showall_command(update: Update, context: CallbackContext) -> None:
         "December": "ДЕК",
     }
 
-    response = header_separator
+    response = "===============================\n"
     response += "Дата рождения, Имя именинника, Пол\n"
-    response += header_separator
+    response += "===============================\n"
 
+    current_month = None
     for row in results:
         if row[0].year >= 1901:
             formatted_date = f"{row[0].day:02d} {months[row[0].strftime('%B')]} {row[0].year}"
         else:
             formatted_date = f"{row[0].day:02d} {months[row[0].strftime('%B')]}"
+
+        month_name = months[row[0].strftime('%B')]
+        if month_name != current_month:
+            response += f"===={month_name}====\n"
+            current_month = month_name
 
         # Формирование строки ответа в соответствии с предложенным форматом
         response += f"{escape_html(formatted_date)}, {escape_html(row[1])}, {escape_html(row[2])}\n"
