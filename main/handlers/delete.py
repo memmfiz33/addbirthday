@@ -39,7 +39,7 @@ def delete_command(update: Update, context: CallbackContext) -> None:
         for i in range((record_offset // 10) + 2, 5):
             keyboard[-1][i - 1] = InlineKeyboardButton(f"Стр. {i}", callback_data="noop")
 
-    keyboard.append([InlineKeyboardButton('==ОТМЕНА==', callback_data='start')])
+    keyboard.append([InlineKeyboardButton('🚫 ОТМЕНА', callback_data='start')])
 
     cur.close()
     conn.close()

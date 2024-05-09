@@ -39,10 +39,11 @@ def handle_button(update: Update, context: CallbackContext) -> None:
         cur.close()
         conn.close()
 
-        keyboard = [
-            [InlineKeyboardButton("УДАЛИТЬ", callback_data=f"delete:{id_to_delete}"),
-             InlineKeyboardButton("Отмена", callback_data="start")]
-        ]
+        keyboard = []  # Определяем keyboard как пустой список
+
+        keyboard.append([InlineKeyboardButton(f"🧹 Удалить", callback_data=f"delete:{id_to_delete}"),
+                         InlineKeyboardButton("🚫 Отмена", callback_data="start")])
+
         query.message.reply_text(f"Вы уверены, что хотите удалить запись {name}?",
                                  reply_markup=InlineKeyboardMarkup(keyboard))
 
