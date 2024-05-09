@@ -31,8 +31,8 @@ def handle_button(update: Update, context: CallbackContext) -> None:
     elif query.data.startswith('confirm_delete:'):  # Добавьте этот блок кода
         id_to_delete = query.data.replace("confirm_delete:", "")
         keyboard = [
-            [InlineKeyboardButton("УДАЛИТЬ", callback_data=f"delete:{id_to_delete}")],
-            [InlineKeyboardButton("Отмена", callback_data="start")]
+            [InlineKeyboardButton("УДАЛИТЬ", callback_data=f"delete:{id_to_delete}"),
+             InlineKeyboardButton("Отмена", callback_data="start")]
         ]
         query.message.reply_text(f"Вы уверены, что хотите удалить запись {id_to_delete}?", reply_markup=InlineKeyboardMarkup(keyboard))
 
