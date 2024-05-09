@@ -33,11 +33,11 @@ def delete_command(update: Update, context: CallbackContext) -> None:
 
         keyboard.append([InlineKeyboardButton(f"{name}, {formatted_date}", callback_data=f"confirm_delete:{id}")])
 
-    keyboard.append([InlineKeyboardButton(f"Стр. {i}" if i != (record_offset // 10) + 1 else f"*Стр. {i}*", callback_data=f"page:{i}") for i in range(1, 5)])
+    keyboard.append([InlineKeyboardButton(f"⚪ Стр. {i}" if i != (record_offset // 10) + 1 else f"🟢 Стр. {i}", callback_data=f"page:{i}") for i in range(1, 5)])
 
     if len(records) < 10:
         for i in range((record_offset // 10) + 2, 5):
-            keyboard[-1][i - 1] = InlineKeyboardButton(f"Стр. {i}", callback_data="noop")
+            keyboard[-1][i - 1] = InlineKeyboardButton(f"⚪ Стр. {i}", callback_data="noop")
 
     keyboard.append([InlineKeyboardButton('🚫 ОТМЕНА', callback_data='start')])
 
