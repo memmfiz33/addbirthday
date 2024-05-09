@@ -4,12 +4,21 @@ from datetime import datetime
 from databaseOperations.models import create_conn
 
 def support_command(update: Update, context: CallbackContext) -> None:
-    update.callback_query.message.reply_text('1.Сделайте Reply/Ответить действие для этого сообщения. 2.Напишите и отправьте ваще обращение', reply_markup=ForceReply())
+    if update.message is not None:
+        update.message.reply_text('👋 Привет! Чтобы отправить сообщение, выполните следующие шаги:\n\n'
+                                  '1️⃣ Нажмите на "Ответить" (reply) к этому сообщению.\n\n'
+                                  '2️⃣ Напишите свое обращение и отправьте его.', reply_markup=ForceReply())
+    elif update.callback_query is not None:
+        update.callback_query.message.reply_text('👋 Привет! Чтобы отправить сообщение, выполните следующие шаги:\n\n'
+                                                 '1️⃣ Нажмите на "Ответить" (reply) к этому сообщению.\n\n'
+                                                 '2️⃣ Напишите свое обращение и отправьте его.', reply_markup=ForceReply())
 
 def handle_support(update: Update, context: CallbackContext) -> None:
     print("handle_support called")  # Добавим сообщение для отладки
     if update.message.reply_to_message:
-        if update.message.reply_to_message.text == '1.Сделайте Reply/Ответить действие для этого сообщения. 2.Напишите и отправьте ваще обращение':
+        if update.message.reply_to_message.text == '👋 Привет! Чтобы отправить сообщение, выполните следующие шаги:\n\n' \
+                                                   '1️⃣ Нажмите на "Ответить" (reply) к этому сообщению.\n\n' \
+                                                   '2️⃣ Напишите свое обращение и отправьте его.':
             user = update.effective_user
             text = update.message.text
 
