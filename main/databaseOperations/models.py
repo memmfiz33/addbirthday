@@ -57,3 +57,14 @@ class Birthdays(Base):
     birth_date = Column(DateTime)
     record_status = Column(Text)
     is_scheduled = Column(Boolean)
+
+class Support(Base):
+    __tablename__ = 'support'
+
+    id = Column(Integer, primary_key=True)
+    user_name = Column(Text)
+    user_telegram_id = Column(Integer)
+    user_telegram_name = Column(Text)
+    support_text = Column(Text)
+    timestamp = Column(DateTime)
+    is_sent = Column(Boolean)

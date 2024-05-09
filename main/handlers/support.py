@@ -43,11 +43,11 @@ def handle_support(update: Update, context: CallbackContext) -> None:
 
             query = """
                 INSERT INTO support (
-                    id, user_name, user_telegram_id, user_telegram_name, support_text, timestamp
-                ) VALUES (%s, %s, %s, %s, %s, %s)
+                    id, user_name, user_telegram_id, user_telegram_name, support_text, timestamp, is_sent
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s)
             """
             values = (
-                id, user_name, user_telegram_id, user_telegram_name, support_text, timestamp
+                id, user_name, user_telegram_id, user_telegram_name, support_text, timestamp, False
             )
             print("Executing SQL query")  # Добавим сообщение для отладки
             cur.execute(query, values)

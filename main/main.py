@@ -10,6 +10,8 @@ from handlers.support import support_command, handle_support
 from logger.logger import logger  # Импортируйте настроенный логгер
 from dotenv import load_dotenv
 load_dotenv()
+from notifications.support_notifications import create_support_notifications, start_support_notifications_scheduler
+
 import threading
 import os
 
@@ -28,17 +30,20 @@ def main() -> None:
     dp.add_handler(MessageHandler(Filters.text & Filters.reply, handle_support))  # добавьте обработчик ответа на команду /support
     dp.add_handler(CallbackQueryHandler(handle_button))
     dp.add_handler(MessageHandler(Filters.text & (~Filters.command), handle_message))
- # нотификации
+    # нотификации
     notification_thread = threading.Thread(target=scheduler_for_notifications, args=(TOKEN,), daemon=True)
     notification_thread.start()
 
-# создание уведомлений
+    # создание уведомлений
     create_notifications_thread = threading.Thread(target=create_notifications, daemon=True)
     create_notifications_thread.start()
 
-# удаление уведомлений
+    # удаление уведомлений
     delete_notifications_thread = threading.Thread(target=delete_notifications, daemon=True)
     delete_notifications_thread.start()
+
+    # Отправка уведомлений поддержки
+    start_support_notifications_scheduler()
 
     updater.start_polling()
     updater.idle()
