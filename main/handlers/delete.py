@@ -49,4 +49,4 @@ def delete_command(update: Update, context: CallbackContext) -> None:
     else:
         message = update.message
 
-    message.reply_text('Какую запись удалить?', reply_markup=InlineKeyboardMarkup(keyboard))
+    message.reply_text('Нажмите на запись для удаления', reply_markup=InlineKeyboardMarkup(keyboard))
