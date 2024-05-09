@@ -87,7 +87,7 @@ def handle_message(update, context):
 
             # обработка ввода пола
             keyboard = [
-                [InlineKeyboardButton(option, callback_data=option) for option in ['М', 'Ж']],
+                [InlineKeyboardButton("М 🕺", callback_data='М'), InlineKeyboardButton("Ж 💃", callback_data='Ж')],
                 [InlineKeyboardButton("Пропустить", callback_data='-')],
                 [InlineKeyboardButton('Отмена', callback_data='start')],  # Добавляем кнопку "Отмена"
             ]

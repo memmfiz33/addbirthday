@@ -23,4 +23,4 @@ def addbirthday_command(update: Update, context: CallbackContext) -> None:
         context.bot.send_message(chat_id=update.effective_chat.id, text='Как зовут именинника?')
     else:
         # Иначе выводим сообщение об ошибке
-        context.bot.send_message(chat_id=update.effective_chat.id, text='Вы достигли максимума записей')
+        context.bot.send_message(chat_id=update.effective_chat.id, text='Вы достигли максимума записей 🔐')

@@ -4,10 +4,10 @@ from telegram.ext import CallbackContext
 
 def start_command(update: Update, context: CallbackContext) -> None:
     keyboard = [
-        [InlineKeyboardButton('Добавить ДР!', callback_data='addbirthday')],
-        [InlineKeyboardButton('Показать все записи', callback_data='showall')],
-        [InlineKeyboardButton('Удалить запись', callback_data='delete')],
-        [InlineKeyboardButton('Инфо и помощь', callback_data='info')]  # Добавьте эту строку
+        [InlineKeyboardButton('🎂 Добавить ДР!', callback_data='addbirthday')],
+        [InlineKeyboardButton('📖 Показать все записи', callback_data='showall')],
+        [InlineKeyboardButton('🗑️ Удалить запись', callback_data='delete')],
+        [InlineKeyboardButton('💡 Инфо и помощь', callback_data='info')]  # Добавьте эту строку
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
