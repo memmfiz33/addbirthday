@@ -19,9 +19,9 @@ def info_command(update: Update, context: CallbackContext) -> None:
     """
 
     keyboard = [
-        [InlineKeyboardButton("Написать автору", callback_data='support'),
-         InlineKeyboardButton("Сообщить о проблеме", callback_data='support')],
-        [InlineKeyboardButton("Отмена", callback_data='start')]  # новая кнопка
+        [InlineKeyboardButton("📬 Написать автору", callback_data='support'),
+         InlineKeyboardButton("🆘 Сообщить о проблеме", callback_data='support')],
+        [InlineKeyboardButton("🚫 Отмена", callback_data='start')]  # новая кнопка
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
