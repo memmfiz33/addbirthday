@@ -15,7 +15,10 @@ def handle_message(update, context):
     # условие обработки ввода имени
     if context.user_data['stage'] == 'awaiting_birth_person':
         if len(text) > 100:
-            context.bot.send_message(chat_id=update.effective_chat.id, text='Ваше имя слишком длинное')
+            keyboard = [[InlineKeyboardButton('Отмена', callback_data='start')]]
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            context.bot.send_message(chat_id=update.effective_chat.id, text='Ваше имя слишком длинное. Введите еще раз',
+                                     reply_markup=reply_markup)
         else:
             context.user_data['birth_person'] = text
             context.user_data['stage'] = 'awaiting_birth_age'

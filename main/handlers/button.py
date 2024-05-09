@@ -110,7 +110,10 @@ def handle_button(update: Update, context: CallbackContext) -> None:
         else:
             context.user_data['birth_month'] = query.data
             context.user_data['stage'] = 'awaiting_birth_date'
-            context.bot.send_message(chat_id=update.effective_chat.id, text='Введите ЧИСЛО рождения')
+            keyboard = [[InlineKeyboardButton('Отмена', callback_data='start')]]
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            context.bot.send_message(chat_id=update.effective_chat.id, text='Введите ЧИСЛО рождения',
+                                     reply_markup=reply_markup)
 
     elif context.user_data['stage'] == 'awaiting_birth_date':
         if query.data == 'start':  # Обрабатываем нажатие кнопки "Отмена"
