@@ -5,8 +5,8 @@ from .delete import delete_command
 from databaseOperations.showAll import showall_command
 from databaseOperations.addNewRecord import save_text
 from databaseOperations.models import create_conn
-from .start import start_command  # Импортируем start_command из модуля start
-from .info import info_command  # Добавьте эту строку
+from .start import start_command
+from .info import info_command
 
 def handle_button(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
@@ -25,8 +25,16 @@ def handle_button(update: Update, context: CallbackContext) -> None:
     elif query.data == 'delete':
         delete_command(update, context)
 
-    elif query.data == 'info':  # Добавьте эту строку
+    elif query.data == 'info':
         info_command(update, context)
+
+    elif query.data.startswith('confirm_delete:'):  # Добавьте этот блок кода
+        id_to_delete = query.data.replace("confirm_delete:", "")
+        keyboard = [
+            [InlineKeyboardButton("УДАЛИТЬ", callback_data=f"delete:{id_to_delete}")],
+            [InlineKeyboardButton("Отмена", callback_data="start")]
+        ]
+        query.message.reply_text(f"Вы уверены, что хотите удалить запись {id_to_delete}?", reply_markup=InlineKeyboardMarkup(keyboard))
 
     elif query.data.startswith('delete:'):
         id_to_delete = query.data.replace("delete:", "")
