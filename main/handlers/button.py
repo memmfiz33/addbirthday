@@ -7,6 +7,7 @@ from databaseOperations.addNewRecord import save_text
 from databaseOperations.models import create_conn
 from .start import start_command
 from .info import info_command
+from .support import support_command
 
 def handle_button(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
@@ -27,6 +28,9 @@ def handle_button(update: Update, context: CallbackContext) -> None:
 
     elif query.data == 'info':
         info_command(update, context)
+
+    elif query.data == 'support':
+        support_command(update, context)
 
     elif query.data.startswith('confirm_delete:'):  # Добавьте этот блок кода
         id_to_delete = query.data.replace("confirm_delete:", "")

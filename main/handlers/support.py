@@ -4,7 +4,7 @@ from datetime import datetime
 from databaseOperations.models import create_conn
 
 def support_command(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text('1.Сделайте Reply/Ответить действие для этого сообщения. 2.Напишите и отправьте ваще обращение', reply_markup=ForceReply())
+    update.callback_query.message.reply_text('1.Сделайте Reply/Ответить действие для этого сообщения. 2.Напишите и отправьте ваще обращение', reply_markup=ForceReply())
 
 def handle_support(update: Update, context: CallbackContext) -> None:
     print("handle_support called")  # Добавим сообщение для отладки
