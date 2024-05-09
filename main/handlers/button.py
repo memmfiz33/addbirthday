@@ -30,11 +30,21 @@ def handle_button(update: Update, context: CallbackContext) -> None:
 
     elif query.data.startswith('confirm_delete:'):  # Добавьте этот блок кода
         id_to_delete = query.data.replace("confirm_delete:", "")
+
+        # Получаем имя человека из БД
+        conn = create_conn()
+        cur = conn.cursor()
+        cur.execute("SELECT birth_person FROM birthdays WHERE id = %s", (id_to_delete,))
+        name = cur.fetchone()[0]
+        cur.close()
+        conn.close()
+
         keyboard = [
             [InlineKeyboardButton("УДАЛИТЬ", callback_data=f"delete:{id_to_delete}"),
              InlineKeyboardButton("Отмена", callback_data="start")]
         ]
-        query.message.reply_text(f"Вы уверены, что хотите удалить запись {id_to_delete}?", reply_markup=InlineKeyboardMarkup(keyboard))
+        query.message.reply_text(f"Вы уверены, что хотите удалить запись {name}?",
+                                 reply_markup=InlineKeyboardMarkup(keyboard))
 
     elif query.data.startswith('delete:'):
         id_to_delete = query.data.replace("delete:", "")
