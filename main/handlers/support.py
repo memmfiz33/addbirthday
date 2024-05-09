@@ -1,17 +1,22 @@
-from telegram import Update, ForceReply
+from telegram import Update, ForceReply, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import CallbackContext, CommandHandler, MessageHandler, Filters
 from datetime import datetime
 from databaseOperations.models import create_conn
 
 def support_command(update: Update, context: CallbackContext) -> None:
+    keyboard = [
+        [InlineKeyboardButton("🚫 Отмена", callback_data='start')]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
     if update.message is not None:
         update.message.reply_text('👋 Привет! Чтобы отправить сообщение, выполните следующие шаги:\n\n'
                                   '1️⃣ Нажмите на "Ответить" (reply) к этому сообщению.\n\n'
-                                  '2️⃣ Напишите свое обращение и отправьте его.', reply_markup=ForceReply())
+                                  '2️⃣ Напишите свое обращение и отправьте его.', reply_markup=reply_markup)
     elif update.callback_query is not None:
         update.callback_query.message.reply_text('👋 Привет! Чтобы отправить сообщение, выполните следующие шаги:\n\n'
                                                  '1️⃣ Нажмите на "Ответить" (reply) к этому сообщению.\n\n'
-                                                 '2️⃣ Напишите свое обращение и отправьте его.', reply_markup=ForceReply())
+                                                 '2️⃣ Напишите свое обращение и отправьте его.', reply_markup=reply_markup)
 
 def handle_support(update: Update, context: CallbackContext) -> None:
     print("handle_support called")  # Добавим сообщение для отладки
@@ -52,7 +57,7 @@ def handle_support(update: Update, context: CallbackContext) -> None:
             cur.close()
             conn.close()
 
-            update.message.reply_text('Спасибо за обращение!')
+            update.message.reply_text('Спасибо за обращение! 📬')
 
 support_handler = CommandHandler('support', support_command)
 support_reply_handler = MessageHandler(Filters.text & Filters.reply, handle_support)
