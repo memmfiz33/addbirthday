@@ -42,13 +42,17 @@ def handle_button(update: Update, context: CallbackContext) -> None:
         conn = create_conn()
         cur = conn.cursor()
 
+        # Получаем имя человека из БД
+        cur.execute("SELECT birth_person FROM birthdays WHERE id = %s", (id_to_delete,))
+        name = cur.fetchone()[0]
+
         cur.execute("UPDATE birthdays SET record_status = 'DELETED' WHERE id = %s", (id_to_delete,))
 
         conn.commit()
         cur.close()
         conn.close()
 
-        query.message.reply_text(f"Запись {id_to_delete} удалена.")
+        query.message.reply_text(f"Запись {name} удалена.")
         start_command(update, context)  # Вызываем start_command
         return
 

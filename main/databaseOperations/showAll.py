@@ -3,11 +3,25 @@ from telegram.ext import CallbackContext
 from .models import create_conn
 import html
 
-
 def escape_html(text):
     # Экранировать специальные символы HTML
     return html.escape(text)
 
+def get_months():
+    return {
+        "January": "ЯНВ",
+        "February": "ФЕВ",
+        "March": "МАР",
+        "April": "АПР",
+        "May": "МАЙ",
+        "June": "ИЮН",
+        "July": "ИЮЛ",
+        "August": "АВГ",
+        "September": "СЕН",
+        "October": "ОКТ",
+        "November": "НОЯ",
+        "December": "ДЕК",
+    }
 
 def showall_command(update: Update, context: CallbackContext) -> None:
     user_id = update.effective_user.id
@@ -30,20 +44,7 @@ def showall_command(update: Update, context: CallbackContext) -> None:
     cur.close()
     conn.close()
 
-    months = {
-        "January": "ЯНВ",
-        "February": "ФЕВ",
-        "March": "МАР",
-        "April": "АПР",
-        "May": "МАЙ",
-        "June": "ИЮН",
-        "July": "ИЮЛ",
-        "August": "АВГ",
-        "September": "СЕН",
-        "October": "ОКТ",
-        "November": "НОЯ",
-        "December": "ДЕК",
-    }
+    months = get_months()
 
     response = "===============================\n"
     response += "Дата рождения, Имя именинника, Пол\n"
