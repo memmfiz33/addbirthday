@@ -11,6 +11,7 @@ from logger.logger import logger  # Импортируйте настроенн�
 from dotenv import load_dotenv
 load_dotenv()
 from notifications.support_notifications import create_support_notifications, start_support_notifications_scheduler
+from AI.gpt_request import generate_birthday_message
 
 import threading
 import os
@@ -19,6 +20,9 @@ TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 
 def main() -> None:
     logger.info('Starting bot....')
+    # вызываем функцию перед запуском бота
+    generate_birthday_message()
+
     updater = Updater(TOKEN, use_context=True)
     dp = updater.dispatcher
     dp.add_handler(CommandHandler('start', start_command))
