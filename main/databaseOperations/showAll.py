@@ -1,9 +1,8 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import CallbackContext, CommandHandler, CallbackQueryHandler, Updater
+from telegram.ext import CallbackContext
 from .models import create_conn
 import html
 import logging
-from AI.gpt_request import generate_birthday_message
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -69,47 +68,7 @@ def showall_command(update: Update, context: CallbackContext) -> None:
 
     keyboard = [
         [InlineKeyboardButton('🚫 Отмена', callback_data='start'),
-         InlineKeyboardButton('🗑️ Перейти к удалению', callback_data='delete')],
-        [InlineKeyboardButton('Сгенерировать поздравления', callback_data='generate_greetings')]
+         InlineKeyboardButton('🗑️ Перейти к удалению', callback_data='delete')]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     update.effective_message.reply_text(response, reply_markup=reply_markup)
-
-def button(update: Update, context: CallbackContext) -> None:
-    query = update.callback_query
-    query.answer()
-
-    logging.info("Button clicked with callback data: %s", query.data)
-
-    if query.data == 'generate_greetings':
-        try:
-            logging.info("Generating birthday message")
-
-            message = generate_birthday_message()
-
-            if message:
-                logging.info("Generated message: %s", message)
-                query.edit_message_text(text=f"Поздравительное сообщение: {message}")
-            else:
-                logging.error("Generated message is None")
-                query.edit_message_text(text="Не удалось сгенерировать сообщение.")
-        except Exception as e:
-            logging.error("Error generating message: %s", str(e))
-            query.edit_message_text(text="Произошла ошибка при генерации сообщения.")
-    elif query.data == 'start':
-        query.edit_message_text(text="Отмена.")
-    elif query.data == 'delete':
-        query.edit_message_text(text="Перейти к удалению.")
-
-def main():
-    updater = Updater("YOUR_TELEGRAM_BOT_TOKEN", use_context=True)
-    dp = updater.dispatcher
-
-    dp.add_handler(CommandHandler("showall", showall_command))
-    dp.add_handler(CallbackQueryHandler(button))
-
-    updater.start_polling()
-    updater.idle()
-
-if __name__ == '__main__':
-    main()

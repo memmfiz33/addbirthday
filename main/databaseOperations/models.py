@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, Text, Boolean, TIMESTAMP
+from sqlalchemy import Column, Integer, String, DateTime, Text, Boolean, TIMESTAMP, BigInteger
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -21,7 +21,6 @@ def get_session():
 
 Base = declarative_base()
 
-# Функция для создания низкоуровневого подключения к базе данных
 def create_conn():
     conn = psycopg2.connect(
         dbname=db_name,
@@ -30,6 +29,7 @@ def create_conn():
         host=db_host
     )
     return conn
+
 
 class Notification(Base):
     __tablename__ = 'notifications'
@@ -41,8 +41,9 @@ class Notification(Base):
     scheduled_time = Column(DateTime)
     notification_text = Column(Text)
     notification_status = Column(String)
-    lastmodified = Column(TIMESTAMP)  # Используйте TIMESTAMP вместо Timestamp
+    lastmodified = Column(TIMESTAMP)
     error_logs = Column(Text)
+
 
 class Birthdays(Base):
     __tablename__ = 'birthdays'
@@ -58,6 +59,7 @@ class Birthdays(Base):
     record_status = Column(Text)
     is_scheduled = Column(Boolean)
 
+
 class Support(Base):
     __tablename__ = 'support'
 
@@ -68,3 +70,14 @@ class Support(Base):
     support_text = Column(Text)
     timestamp = Column(DateTime)
     is_sent = Column(Boolean)
+
+
+class GptRequests(Base):
+    __tablename__ = 'gpt_requests'
+
+    id = Column(Integer, primary_key=True)
+    user_telegram_id = Column(BigInteger, nullable=False)
+    full_request_text = Column(Text, nullable=False)
+    full_response_text = Column(Text, nullable=False)
+    status = Column(String(20), nullable=False)
+    last_modified_date = Column(TIMESTAMP, default='CURRENT_TIMESTAMP')
