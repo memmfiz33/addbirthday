@@ -1,5 +1,5 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import CallbackContext
+from telegram.ext import CallbackContext, CommandHandler, CallbackQueryHandler, Updater
 from .models import create_conn
 import html
 import logging
@@ -83,15 +83,9 @@ def button(update: Update, context: CallbackContext) -> None:
 
     if query.data == 'generate_greetings':
         try:
-            name = "Папа"
-            age = 50
-            gender = "М"
-            category = "Родители"
-            context = "Это любимый папуля у него юбилей"
+            logging.info("Generating birthday message")
 
-            logging.info("Generating birthday message for: Name=%s, Age=%d, Gender=%s, Category=%s, Context=%s", name, age, gender, category, context)
-
-            message = generate_birthday_message(name, age, gender, category, context)
+            message = generate_birthday_message()
 
             if message:
                 logging.info("Generated message: %s", message)
