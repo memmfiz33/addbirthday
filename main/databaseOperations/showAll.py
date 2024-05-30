@@ -2,9 +2,12 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackContext
 from .models import create_conn
 import html
+import logging
+from AI.gpt_request import generate_birthday_message
+
+logging.basicConfig(level=logging.DEBUG)
 
 def escape_html(text):
-    # Экранировать специальные символы HTML
     return html.escape(text)
 
 def get_months():
@@ -32,7 +35,7 @@ def showall_command(update: Update, context: CallbackContext) -> None:
     SELECT 
         b.birth_date,
         b.birth_person,
-        COALESCE(b.sex, '-') -- Если пол отсутствует, заменяем на дефис
+        COALESCE(b.sex, '-') 
     FROM birthdays b
     WHERE user_telegram_id = %s
     AND record_status = 'ACTIVE'
@@ -62,11 +65,57 @@ def showall_command(update: Update, context: CallbackContext) -> None:
             response += f"===={month_name}====\n"
             current_month = month_name
 
-        # Формирование строки ответа в соответствии с предложенным форматом
         response += f"{escape_html(formatted_date)}, {escape_html(row[1])}, {escape_html(row[2])}\n"
 
     keyboard = [
-        [InlineKeyboardButton('🚫 Отмена', callback_data='start'), InlineKeyboardButton('🗑️ Перейти к удалению', callback_data='delete') ]
+        [InlineKeyboardButton('🚫 Отмена', callback_data='start'),
+         InlineKeyboardButton('🗑️ Перейти к удалению', callback_data='delete')],
+        [InlineKeyboardButton('Сгенерировать поздравления', callback_data='generate_greetings')]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     update.effective_message.reply_text(response, reply_markup=reply_markup)
+
+def button(update: Update, context: CallbackContext) -> None:
+    query = update.callback_query
+    query.answer()
+
+    logging.info("Button clicked with callback data: %s", query.data)
+
+    if query.data == 'generate_greetings':
+        try:
+            name = "Папа"
+            age = 50
+            gender = "М"
+            category = "Родители"
+            context = "Это любимый папуля у него юбилей"
+
+            logging.info("Generating birthday message for: Name=%s, Age=%d, Gender=%s, Category=%s, Context=%s", name, age, gender, category, context)
+
+            message = generate_birthday_message(name, age, gender, category, context)
+
+            if message:
+                logging.info("Generated message: %s", message)
+                query.edit_message_text(text=f"Поздравительное сообщение: {message}")
+            else:
+                logging.error("Generated message is None")
+                query.edit_message_text(text="Не удалось сгенерировать сообщение.")
+        except Exception as e:
+            logging.error("Error generating message: %s", str(e))
+            query.edit_message_text(text="Произошла ошибка при генерации сообщения.")
+    elif query.data == 'start':
+        query.edit_message_text(text="Отмена.")
+    elif query.data == 'delete':
+        query.edit_message_text(text="Перейти к удалению.")
+
+def main():
+    updater = Updater("YOUR_TELEGRAM_BOT_TOKEN", use_context=True)
+    dp = updater.dispatcher
+
+    dp.add_handler(CommandHandler("showall", showall_command))
+    dp.add_handler(CallbackQueryHandler(button))
+
+    updater.start_polling()
+    updater.idle()
+
+if __name__ == '__main__':
+    main()
