@@ -4,6 +4,7 @@ import json
 from databaseOperations.models import create_conn
 from dotenv import load_dotenv
 import os
+from datetime import datetime
 
 logging.basicConfig(level=logging.DEBUG)
 load_dotenv()
@@ -11,7 +12,27 @@ load_dotenv()
 YGPT_TOKEN = os.getenv('YGPT_TOKEN')
 
 
-def generate_birthday_message():
+def calculate_age(birth_date):
+    today = datetime.today()
+    age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
+    return age
+
+
+def generate_birthday_message(record_id, user_telegram_id):
+    conn = create_conn()
+    cur = conn.cursor()
+    cur.execute("SELECT birth_person, birth_date, sex FROM birthdays WHERE id = %s", (record_id,))
+    record = cur.fetchone()
+    cur.close()
+    conn.close()
+
+    if not record:
+        logging.error("Record with id %s not found", record_id)
+        return None
+
+    birth_person, birth_date, sex = record
+    age = calculate_age(birth_date)
+
     prompt = {
         "modelUri": "gpt://b1gdrj9d7rqov4qcij8m/yandexgpt/latest",
         "completionOptions": {
@@ -28,20 +49,15 @@ def generate_birthday_message():
             },
             {
                 "role": "user",
-                "text": "Это любимый папуля у него юбилей"
+                "text": "Поздравь креативно"
             },
             {
                 "role": "user",
-                "text": "Имя: Папа; Возраст: 50, Пол: М"
-            },
-            {
-                "role": "user",
-                "text": "Категория: Родители"
+                "text": f"Имя: {birth_person}; Возраст: {age}, Пол: {sex}"
             }
         ]
     }
 
-    # Создаем читаемую версию запроса
     readable_request = "\n".join(
         [f"{msg['role']}: {msg['text']}" for msg in prompt["messages"] if msg["role"] == "user"])
 
@@ -53,7 +69,7 @@ def generate_birthday_message():
 
     logging.info("Sending request to Yandex API with prompt: %s", prompt)
 
-    result = None  # Инициализация переменной result
+    result = None
 
     try:
         response = requests.post(url, headers=headers, json=prompt)
@@ -72,15 +88,14 @@ def generate_birthday_message():
             logging.error("Failed to parse response from Yandex API: %s", e)
             result = None
 
-    # Save to the database
     conn = create_conn()
     cur = conn.cursor()
     cur.execute(
         "INSERT INTO gpt_requests (user_telegram_id, full_request_text, full_response_text, status) VALUES (%s, %s, %s, %s)",
-        (319661378,  # replace with actual user id
+        (user_telegram_id,
          readable_request,
          result,
-         status))  # Status now is a text string
+         status))
     conn.commit()
     cur.close()
     conn.close()
@@ -89,7 +104,7 @@ def generate_birthday_message():
 
 
 if __name__ == "__main__":
-    message = generate_birthday_message()
+    message = generate_birthday_message(1, 319661378)  # Replace 1 with the actual record_id and user_id for testing
     if message:
         logging.info("Generated birthday message: %s", message)
     else:
