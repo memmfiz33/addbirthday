@@ -10,6 +10,7 @@ load_dotenv()
 
 YGPT_TOKEN = os.getenv('YGPT_TOKEN')
 
+
 def generate_birthday_message():
     prompt = {
         "modelUri": "gpt://b1gdrj9d7rqov4qcij8m/yandexgpt/latest",
@@ -48,6 +49,8 @@ def generate_birthday_message():
 
     logging.info("Sending request to Yandex API with prompt: %s", prompt)
 
+    result = None  # Инициализация переменной result
+
     try:
         response = requests.post(url, headers=headers, json=prompt)
         response.raise_for_status()
@@ -56,23 +59,24 @@ def generate_birthday_message():
     except requests.exceptions.RequestException as e:
         logging.error("Request to Yandex API failed: %s", e)
         status = "ERROR"
-        return None
 
-    try:
-        result = response.json()["result"]["alternatives"][0]["message"]["text"].strip()
-        logging.debug("Parsed result: %s", result)
-    except (KeyError, IndexError, ValueError) as e:
-        logging.error("Failed to parse response from Yandex API: %s", e)
-        return None
+    if result is None:
+        try:
+            result = response.json()["result"]["alternatives"][0]["message"]["text"].strip()
+            logging.debug("Parsed result: %s", result)
+        except (KeyError, IndexError, ValueError) as e:
+            logging.error("Failed to parse response from Yandex API: %s", e)
+            result = None
 
     # Save to the database
     conn = create_conn()
     cur = conn.cursor()
-    cur.execute("INSERT INTO gpt_requests (user_telegram_id, full_request_text, full_response_text, status) VALUES (%s, %s, %s, %s)",
-                (319661378,  # replace with actual user id
-                 json.dumps(prompt),
-                 result,
-                 status))  # Status now is a text string
+    cur.execute(
+        "INSERT INTO gpt_requests (user_telegram_id, full_request_text, full_response_text, status) VALUES (%s, %s, %s, %s)",
+        (319661378,  # replace with actual user id
+         json.dumps(prompt),
+         result,
+         status))  # Status now is a text string
     conn.commit()
     cur.close()
     conn.close()
