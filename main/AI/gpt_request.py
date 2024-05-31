@@ -41,6 +41,10 @@ def generate_birthday_message():
         ]
     }
 
+    # Создаем читаемую версию запроса
+    readable_request = "\n".join(
+        [f"{msg['role']}: {msg['text']}" for msg in prompt["messages"] if msg["role"] == "user"])
+
     url = "https://llm.api.cloud.yandex.net/foundationModels/v1/completion"
     headers = {
         "Content-Type": "application/json",
@@ -74,7 +78,7 @@ def generate_birthday_message():
     cur.execute(
         "INSERT INTO gpt_requests (user_telegram_id, full_request_text, full_response_text, status) VALUES (%s, %s, %s, %s)",
         (319661378,  # replace with actual user id
-         json.dumps(prompt),
+         readable_request,
          result,
          status))  # Status now is a text string
     conn.commit()
