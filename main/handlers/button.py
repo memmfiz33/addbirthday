@@ -33,10 +33,11 @@ def handle_button(update: Update, context: CallbackContext) -> None:
         support_command(update, context)
 
     elif query.data == 'generate_message':  # Добавляем этот блок
+        query.message.reply_text("Подождите минутку, пока идет генерация сообщения ⏳")
         from AI.gpt_request import generate_birthday_message
         message = generate_birthday_message()
         if message:
-            query.message.reply_text(f"Поздравление: {message}")
+            query.message.reply_text(message)
         else:
             query.message.reply_text("Ошибка при создании поздравления. Попробуйте снова позже.")
 
@@ -139,4 +140,3 @@ def handle_button(update: Update, context: CallbackContext) -> None:
             del context.user_data['stage']
             context.bot.send_message(chat_id=update.effective_chat.id, text='Данные успешно сохранены! 🎉')
             start_command(update, context)
-
