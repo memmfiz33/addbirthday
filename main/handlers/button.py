@@ -32,10 +32,17 @@ def handle_button(update: Update, context: CallbackContext) -> None:
     elif query.data == 'support':
         support_command(update, context)
 
-    elif query.data.startswith('confirm_delete:'):  # Добавьте этот блок кода
+    elif query.data == 'generate_message':  # Добавляем этот блок
+        from AI.gpt_request import generate_birthday_message
+        message = generate_birthday_message()
+        if message:
+            query.message.reply_text(f"Поздравление: {message}")
+        else:
+            query.message.reply_text("Ошибка при создании поздравления. Попробуйте снова позже.")
+
+    elif query.data.startswith('confirm_delete:'):
         id_to_delete = query.data.replace("confirm_delete:", "")
 
-        # Получаем имя человека из БД
         conn = create_conn()
         cur = conn.cursor()
         cur.execute("SELECT birth_person FROM birthdays WHERE id = %s", (id_to_delete,))
@@ -43,7 +50,7 @@ def handle_button(update: Update, context: CallbackContext) -> None:
         cur.close()
         conn.close()
 
-        keyboard = []  # Определяем keyboard как пустой список
+        keyboard = []
 
         keyboard.append([InlineKeyboardButton(f"🧹 Удалить", callback_data=f"delete:{id_to_delete}"),
                          InlineKeyboardButton("🚫 Отмена", callback_data="start")])
@@ -57,7 +64,6 @@ def handle_button(update: Update, context: CallbackContext) -> None:
         conn = create_conn()
         cur = conn.cursor()
 
-        # Получаем имя человека из БД
         cur.execute("SELECT birth_person FROM birthdays WHERE id = %s", (id_to_delete,))
         name = cur.fetchone()[0]
 
@@ -68,24 +74,24 @@ def handle_button(update: Update, context: CallbackContext) -> None:
         conn.close()
 
         query.message.reply_text(f"Запись {name} удалена.")
-        start_command(update, context)  # Вызываем start_command
+        start_command(update, context)
         return
 
-    elif query.data.startswith('page:'):  # Обрабатываем нажатие на кнопки страниц
+    elif query.data.startswith('page:'):
         delete_command(update, context)
 
-    elif query.data == 'noop':  # Обрабатываем нажатие на неактивные кнопки страниц
+    elif query.data == 'noop':
         pass
 
-    elif query.data == 'start':  # Обрабатываем нажатие кнопки "Отмена"
+    elif query.data == 'start':
         query.message.reply_text('Отмена действия. Вы перемещены на главный экран')
-        start_command(update, context)  # Вызываем start_command
+        start_command(update, context)
         return
 
     elif context.user_data['stage'] == 'awaiting_birth_age':
-        if query.data == 'start':  # Обрабатываем нажатие кнопки "Отмена"
+        if query.data == 'start':
             query.message.reply_text('Отмена действия. Вы перемещены на главный экран')
-            start_command(update, context)  # Вызываем start_command
+            start_command(update, context)
             return
         elif query.data == 'skip':
             context.user_data['birth_age'] = 1900
@@ -103,9 +109,9 @@ def handle_button(update: Update, context: CallbackContext) -> None:
                                      reply_markup=reply_markup)
 
     elif context.user_data['stage'] == 'awaiting_birth_month':
-        if query.data == 'start':  # Обрабатываем нажатие кнопки "Отмена"
+        if query.data == 'start':
             query.message.reply_text('Отмена действия. Вы перемещены на главный экран')
-            start_command(update, context)  # Вызываем start_command
+            start_command(update, context)
             return
         else:
             context.user_data['birth_month'] = query.data
@@ -116,15 +122,15 @@ def handle_button(update: Update, context: CallbackContext) -> None:
                                      reply_markup=reply_markup)
 
     elif context.user_data['stage'] == 'awaiting_birth_date':
-        if query.data == 'start':  # Обрабатываем нажатие кнопки "Отмена"
+        if query.data == 'start':
             query.message.reply_text('Отмена действия. Вы перемещены на главный экран')
-            start_command(update, context)  # Вызываем start_command
+            start_command(update, context)
             return
 
     elif context.user_data['stage'] == 'awaiting_sex':
-        if query.data == 'start':  # Обрабатываем нажатие кнопки "Отмена"
+        if query.data == 'start':
             query.message.reply_text('Отмена действия. Вы перемещены на главный экран')
-            start_command(update, context)  # Вызываем start_command
+            start_command(update, context)
             return
         else:
             context.user_data['sex'] = query.data
@@ -132,4 +138,5 @@ def handle_button(update: Update, context: CallbackContext) -> None:
                       update.effective_user.username, context.user_data)
             del context.user_data['stage']
             context.bot.send_message(chat_id=update.effective_chat.id, text='Данные успешно сохранены! 🎉')
-            start_command(update, context)  # Вызываем start
+            start_command(update, context)
+

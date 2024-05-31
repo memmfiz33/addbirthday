@@ -7,7 +7,8 @@ def start_command(update: Update, context: CallbackContext) -> None:
         [InlineKeyboardButton('🎂 Добавить ДР!', callback_data='addbirthday')],
         [InlineKeyboardButton('📖 Показать все записи', callback_data='showall')],
         [InlineKeyboardButton('🗑️ Удалить запись', callback_data='delete')],
-        [InlineKeyboardButton('💡 Инфо и помощь', callback_data='info')]  # Добавьте эту строку
+        [InlineKeyboardButton('🎉 Создать поздравление', callback_data='generate_message')],  # Добавляем эту строку
+        [InlineKeyboardButton('💡 Инфо и помощь', callback_data='info')]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
