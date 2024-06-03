@@ -55,6 +55,7 @@ def handle_button(update: Update, context: CallbackContext) -> None:
         conn.close()
 
         keyboard = []
+
         keyboard.append([InlineKeyboardButton(f"🧹 Удалить", callback_data=f"delete:{id_to_delete}"),
                          InlineKeyboardButton("🚫 Отмена", callback_data="start")])
 
