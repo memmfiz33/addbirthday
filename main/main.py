@@ -11,6 +11,7 @@ from logger.logger import logger  # Импортируйте настроенн�
 from dotenv import load_dotenv
 load_dotenv()
 from notifications.support_notifications import create_support_notifications, start_support_notifications_scheduler
+from AI.ai_buttons import generate_message, handle_generate_callback  # Добавьте этот импорт
 
 import threading
 import os
@@ -30,6 +31,11 @@ def main() -> None:
     dp.add_handler(MessageHandler(Filters.text & Filters.reply, handle_support))  # добавьте обработчик ответа на команду /support
     dp.add_handler(CallbackQueryHandler(handle_button))
     dp.add_handler(MessageHandler(Filters.text & (~Filters.command), handle_message))
+
+    # Обработчики для генерации сообщений AI
+    dp.add_handler(CallbackQueryHandler(generate_message, pattern='^generate_message$'))
+    dp.add_handler(CallbackQueryHandler(handle_generate_callback, pattern='^generate:'))
+
     # нотификации
     notification_thread = threading.Thread(target=scheduler_for_notifications, args=(TOKEN,), daemon=True)
     notification_thread.start()
