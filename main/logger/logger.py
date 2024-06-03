@@ -16,13 +16,11 @@ class FileHandler(logging.Handler):
         super().__init__(*args, **kwargs)
         self.start_time = datetime.datetime.now()
         self.session_number = self.get_session_number()
-        # Путь для ВМ
         self.filename = f"/home/memmfiz_admin/addbirthday/main/logger/logs/{str(self.session_number).zfill(4)}_{self.start_time.strftime('%d%m%Y-%H-%M-%S')}.txt"
-        # Путь, который был ранее (закомментирован)
-        # self.filename = f"logger/logs/{str(self.session_number).zfill(4)}_{self.start_time.strftime('%d%m%Y-%H-%M-%S')}.txt"
         self.log_count = 0
         self.internal_logger = logging.getLogger('FileHandler')
         self.internal_logger.addHandler(logging.StreamHandler())
+        self.internal_logger.setLevel(logging.ERROR)  # Измените уровень логирования на ERROR, чтобы убрать информационные сообщения
         atexit.register(self.close_file)
 
     def get_session_number(self):
@@ -45,13 +43,12 @@ class FileHandler(logging.Handler):
                 self.filename = f"/home/memmfiz_admin/addbirthday/main/logger/logs/{str(self.session_number).zfill(4)}_{self.start_time.strftime('%d%m%Y-%H-%M-%S')}.txt"
                 self.log_count = 0
 
-            with open(self.filename, 'a', encoding='utf-8') as f:  # Добавьте кодировку 'utf-8' здесь
+            with open(self.filename, 'a', encoding='utf-8') as f:
                 f.write(log_entry + "\n")
             self.log_count += 1
-            self.internal_logger.info(f"Successfully wrote to file: {self.filename}")
         except Exception as e:
             self.internal_logger.error(f"Error writing to file: {e}")
-            raise e  # Добавлено: повторно поднимаем исключение, чтобы увидеть его в консоли
+            raise e
 
     def close_file(self):
         try:
@@ -60,7 +57,7 @@ class FileHandler(logging.Handler):
             self.internal_logger.info("Successfully closed log file")
         except Exception as e:
             self.internal_logger.error(f"Error closing log file: {e}")
-            raise e  # Добавлено: повторно поднимаем исключение, чтобы увидеть его в консоли
+            raise e
 
 if not os.path.exists('/home/memmfiz_admin/addbirthday/main/logger/logs'):
     os.makedirs('/home/memmfiz_admin/addbirthday/main/logger/logs')

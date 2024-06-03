@@ -11,14 +11,12 @@ load_dotenv()
 
 YGPT_TOKEN = os.getenv('YGPT_TOKEN')
 
-
 def calculate_age(birth_date):
     today = datetime.today()
     age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
     return age
 
-
-def generate_birthday_message(record_id, user_telegram_id):
+def generate_birthday_message(record_id, user_telegram_id, user_context):
     conn = create_conn()
     cur = conn.cursor()
     cur.execute("SELECT birth_person, birth_date, sex FROM birthdays WHERE id = %s", (record_id,))
@@ -49,7 +47,7 @@ def generate_birthday_message(record_id, user_telegram_id):
             },
             {
                 "role": "user",
-                "text": "Поздравь креативно"
+                "text": user_context
             },
             {
                 "role": "user",
@@ -102,9 +100,8 @@ def generate_birthday_message(record_id, user_telegram_id):
 
     return result
 
-
 if __name__ == "__main__":
-    message = generate_birthday_message(1, 319661378)  # Replace 1 with the actual record_id and user_id for testing
+    message = generate_birthday_message(1, 319661378, "Это тестовый контекст")  # Replace 1 with the actual record_id and user_id for testing
     if message:
         logging.info("Generated birthday message: %s", message)
     else:

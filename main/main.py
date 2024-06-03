@@ -1,7 +1,7 @@
 import sys
 sys.path.append('/home/memmfiz_admin/addbirthday/main')
 from telegram.ext import Updater, CommandHandler, MessageHandler, CallbackQueryHandler, Filters
-from handlers import start_command, addbirthday_command, info_command, handle_message, handle_button, delete_command
+from handlers import start_command, addbirthday_command, info_command, handle_button, delete_command
 from databaseOperations.showAll import showall_command
 from notifications.notify import scheduler_for_notifications
 from notifications.create_notifications import create_notifications
@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 from notifications.support_notifications import create_support_notifications, start_support_notifications_scheduler
-from AI.ai_buttons import generate_message, handle_generate_callback
+from AI.ai_buttons import generate_message, handle_generate_callback, handle_message  # Импортируем новые обработчики
 
 import threading
 import os
@@ -32,7 +32,7 @@ def main() -> None:
     dp.add_handler(CommandHandler('support', support_command))  # добавьте обработчик команды /support
     dp.add_handler(MessageHandler(Filters.text & Filters.reply, handle_support))  # добавьте обработчик ответа на команду /support
     dp.add_handler(CallbackQueryHandler(handle_button))
-    dp.add_handler(MessageHandler(Filters.text & (~Filters.command), handle_message))
+    dp.add_handler(MessageHandler(Filters.text & (~Filters.command), handle_message))  # добавьте обработчик сообщений
 
     # Обработчики для генерации сообщений AI
     dp.add_handler(CallbackQueryHandler(generate_message, pattern='^generate_message$'))
