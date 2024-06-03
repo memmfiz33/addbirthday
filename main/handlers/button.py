@@ -33,17 +33,6 @@ def handle_button(update: Update, context: CallbackContext) -> None:
     elif query.data == 'support':
         support_command(update, context)
 
-    elif query.data == 'generate_message':
-        generate_message(update, context)
-
-    elif query.data.startswith('generate_page:'):
-        page = int(query.data.replace("generate_page:", ""))
-        context.user_data['record_offset'] = (page - 1) * 10
-        generate_message(update, context)
-
-    elif query.data.startswith('generate:'):
-        handle_generate_callback(update, context)
-
     elif query.data.startswith('confirm_delete:'):
         id_to_delete = query.data.replace("confirm_delete:", "")
 
@@ -82,7 +71,7 @@ def handle_button(update: Update, context: CallbackContext) -> None:
         return
 
     elif query.data.startswith('page:'):
-        delete_command(update, context)
+        showall_command(update, context)
 
     elif query.data == 'noop':
         pass
@@ -91,6 +80,12 @@ def handle_button(update: Update, context: CallbackContext) -> None:
         query.message.reply_text('Отмена действия. Вы перемещены на главный экран')
         start_command(update, context)
         return
+
+    elif query.data == 'generate_message':
+        generate_message(update, context)
+
+    elif query.data.startswith('generate:'):
+        handle_generate_callback(update, context)
 
     elif context.user_data['stage'] == 'awaiting_birth_age':
         if query.data == 'start':
