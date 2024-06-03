@@ -6,6 +6,7 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG)
 
+
 def generate_message(update: Update, context: CallbackContext) -> None:
     conn = create_conn()
     cur = conn.cursor()
@@ -36,7 +37,7 @@ def generate_message(update: Update, context: CallbackContext) -> None:
         for i in range((record_offset // 10) + 2, 5):
             keyboard[-1][i - 1] = InlineKeyboardButton(f"⚪ Стр. {i}", callback_data="noop")
 
-    keyboard.append([InlineKeyboardButton('🚫 ОТМЕНА', callback_data='start')])
+    keyboard.append([InlineKeyboardButton('🚫 Отмена', callback_data='start')])
 
     cur.close()
     conn.close()
@@ -48,6 +49,7 @@ def generate_message(update: Update, context: CallbackContext) -> None:
 
     message.reply_text('Выберите запись для создания поздравления', reply_markup=InlineKeyboardMarkup(keyboard))
 
+
 def handle_generate_callback(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
     user_id = update.effective_user.id
@@ -56,11 +58,11 @@ def handle_generate_callback(update: Update, context: CallbackContext) -> None:
     context.user_data['stage'] = 'awaiting_user_context'
 
     query.message.reply_text(
-        "Напишите что-то интересное о человеке, это может быть общее увлечение, интересная история или что-то еще.",
+        "Напишите что-то интересное о человеке, это может быть общее увлечение, интересная история или что-то еще. Если нечего добавить, напишите 'Нет' и отправьте.",
         reply_markup=InlineKeyboardMarkup([
-            [InlineKeyboardButton("Пропустить", callback_data="skip_context")],
-            [InlineKeyboardButton("Отмена", callback_data="start")]
+            [InlineKeyboardButton("🚫 Отмена", callback_data="start")]
         ]))
+
 
 def handle_message(update: Update, context: CallbackContext) -> None:
     logging.debug(f"Received message: {update.message.text}")
@@ -74,10 +76,11 @@ def handle_message(update: Update, context: CallbackContext) -> None:
     else:
         logging.debug("Stage is not awaiting_user_context")
 
+
 def send_generate_request(update: Update, context: CallbackContext) -> None:
     user_id = update.effective_user.id
     record_id = context.user_data.get('record_id')
-    user_context = context.user_data.get('user_context', 'Поздравь креативно')
+    user_context = context.user_data.get('user_context', '-')
 
     logging.debug(f"Sending request with user_id: {user_id}, record_id: {record_id}, user_context: {user_context}")
 
