@@ -20,22 +20,30 @@ def handle_button(update: Update, context: CallbackContext) -> None:
 
     if query.data == 'addbirthday':
         addbirthday_command(update, context)
+
     elif query.data == 'showall':
         showall_command(update, context)
+
     elif query.data == 'delete':
         delete_command(update, context)
+
     elif query.data == 'info':
         info_command(update, context)
+
     elif query.data == 'support':
         support_command(update, context)
+
     elif query.data == 'generate_message':
         generate_message(update, context)
+
     elif query.data.startswith('generate_page:'):
         page = int(query.data.replace("generate_page:", ""))
         context.user_data['record_offset'] = (page - 1) * 10
         generate_message(update, context)
+
     elif query.data.startswith('generate:'):
         handle_generate_callback(update, context)
+
     elif query.data.startswith('confirm_delete:'):
         id_to_delete = query.data.replace("confirm_delete:", "")
 

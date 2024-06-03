@@ -6,7 +6,6 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG)
 
-
 def generate_message(update: Update, context: CallbackContext) -> None:
     conn = create_conn()
     cur = conn.cursor()
