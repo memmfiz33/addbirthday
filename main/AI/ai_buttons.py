@@ -6,6 +6,7 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG)
 
+
 def generate_message(update: Update, context: CallbackContext) -> None:
     conn = create_conn()
     cur = conn.cursor()
@@ -48,6 +49,7 @@ def generate_message(update: Update, context: CallbackContext) -> None:
 
     message.reply_text('Выберите запись для создания поздравления', reply_markup=InlineKeyboardMarkup(keyboard))
 
+
 def handle_generate_callback(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
     user_id = update.effective_user.id
@@ -61,6 +63,7 @@ def handle_generate_callback(update: Update, context: CallbackContext) -> None:
             [InlineKeyboardButton("🚫 Отмена", callback_data="start")]
         ]))
 
+
 def handle_message(update: Update, context: CallbackContext) -> None:
     logging.debug(f"Received message: {update.message.text}")
     logging.debug(f"User data: {context.user_data}")
@@ -72,6 +75,7 @@ def handle_message(update: Update, context: CallbackContext) -> None:
         send_generate_request(update, context)
     else:
         logging.debug("Stage is not awaiting_user_context")
+
 
 def send_generate_request(update: Update, context: CallbackContext) -> None:
     user_id = update.effective_user.id

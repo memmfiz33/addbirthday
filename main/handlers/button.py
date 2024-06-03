@@ -20,56 +20,60 @@ def handle_button(update: Update, context: CallbackContext) -> None:
 
     if query.data == 'addbirthday':
         addbirthday_command(update, context)
-
     elif query.data == 'showall':
         showall_command(update, context)
-
     elif query.data == 'delete':
         delete_command(update, context)
-
     elif query.data == 'info':
         info_command(update, context)
-
     elif query.data == 'support':
         support_command(update, context)
-
     elif query.data == 'generate_message':
         generate_message(update, context)
-
-    elif query.data.startswith('generate:'):
-        handle_generate_callback(update, context)
-
     elif query.data.startswith('generate_page:'):
         page = int(query.data.replace("generate_page:", ""))
         context.user_data['record_offset'] = (page - 1) * 10
         generate_message(update, context)
-
+    elif query.data.startswith('generate:'):
+        handle_generate_callback(update, context)
     elif query.data.startswith('confirm_delete:'):
         id_to_delete = query.data.replace("confirm_delete:", "")
+
         conn = create_conn()
         cur = conn.cursor()
         cur.execute("SELECT birth_person FROM birthdays WHERE id = %s", (id_to_delete,))
         name = cur.fetchone()[0]
         cur.close()
         conn.close()
-        keyboard = [[InlineKeyboardButton(f"🧹 Удалить", callback_data=f"delete:{id_to_delete}"),
-                     InlineKeyboardButton("🚫 Отмена", callback_data="start")]]
+
+        keyboard = []
+        keyboard.append([InlineKeyboardButton(f"🧹 Удалить", callback_data=f"delete:{id_to_delete}"),
+                         InlineKeyboardButton("🚫 Отмена", callback_data="start")])
+
         query.message.reply_text(f"Вы уверены, что хотите удалить запись {name}?",
                                  reply_markup=InlineKeyboardMarkup(keyboard))
 
     elif query.data.startswith('delete:'):
         id_to_delete = query.data.replace("delete:", "")
+
         conn = create_conn()
         cur = conn.cursor()
+
         cur.execute("SELECT birth_person FROM birthdays WHERE id = %s", (id_to_delete,))
         name = cur.fetchone()[0]
+
         cur.execute("UPDATE birthdays SET record_status = 'DELETED' WHERE id = %s", (id_to_delete,))
+
         conn.commit()
         cur.close()
         conn.close()
+
         query.message.reply_text(f"Запись {name} удалена.")
         start_command(update, context)
         return
+
+    elif query.data.startswith('page:'):
+        delete_command(update, context)
 
     elif query.data == 'noop':
         pass
@@ -87,15 +91,17 @@ def handle_button(update: Update, context: CallbackContext) -> None:
         elif query.data == 'skip':
             context.user_data['birth_age'] = 1900
             context.user_data['stage'] = 'awaiting_birth_month'
+
             keyboard = [
                 [InlineKeyboardButton(m, callback_data=m) for m in ["Январь", "Февраль", "Март"]],
                 [InlineKeyboardButton(m, callback_data=m) for m in ["Апрель", "Май", "Июнь"]],
                 [InlineKeyboardButton(m, callback_data=m) for m in ["Июль", "Август", "Сентябрь"]],
-                [InlineKeyboardButton(m, callback_data=m) for м in ["Октябрь", "Ноябрь", "Декабрь"]],
+                [InlineKeyboardButton(m, callback_data=m) for m in ["Октябрь", "Ноябрь", "Декабрь"]],
                 [InlineKeyboardButton('Отмена', callback_data='start')],
             ]
             reply_markup = InlineKeyboardMarkup(keyboard)
-            context.bot.send_message(chat_id=update.effective_chat.id, text='Выберите месяц рождения', reply_markup=reply_markup)
+            context.bot.send_message(chat_id=update.effective_chat.id, text='Выберите месяц рождения',
+                                     reply_markup=reply_markup)
 
     elif context.user_data['stage'] == 'awaiting_birth_month':
         if query.data == 'start':
@@ -107,7 +113,8 @@ def handle_button(update: Update, context: CallbackContext) -> None:
             context.user_data['stage'] = 'awaiting_birth_date'
             keyboard = [[InlineKeyboardButton('Отмена', callback_data='start')]]
             reply_markup = InlineKeyboardMarkup(keyboard)
-            context.bot.send_message(chat_id=update.effective_chat.id, text='Введите ЧИСЛО рождения', reply_markup=reply_markup)
+            context.bot.send_message(chat_id=update.effective_chat.id, text='Введите ЧИСЛО рождения',
+                                     reply_markup=reply_markup)
 
     elif context.user_data['stage'] == 'awaiting_birth_date':
         if query.data == 'start':
