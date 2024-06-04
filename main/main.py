@@ -35,6 +35,7 @@ def main() -> None:
     # Обработчики для генерации сообщений AI
     dp.add_handler(CallbackQueryHandler(generate_message, pattern='^generate_message$'))
     dp.add_handler(CallbackQueryHandler(handle_generate_callback, pattern='^generate:'))
+    dp.add_handler(CallbackQueryHandler(handle_generate_callback, pattern='^generate_page:'))  # Добавим обработчик для страниц
 
     # нотификации
     notification_thread = threading.Thread(target=scheduler_for_notifications, args=(TOKEN,), daemon=True)
