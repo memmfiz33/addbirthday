@@ -66,6 +66,7 @@ def handle_generate_callback(update: Update, context: CallbackContext) -> None:
 
 
 def handle_message(update: Update, context: CallbackContext) -> None:
+    logging.debug("handle_message called")
     logging.debug(f"Received message: {update.message.text}")
     logging.debug(f"User data: {context.user_data}")
     if context.user_data.get('stage') == 'awaiting_user_context':
@@ -73,14 +74,12 @@ def handle_message(update: Update, context: CallbackContext) -> None:
         context.user_data['user_context'] = update.message.text
         context.user_data['stage'] = ''
         update.message.reply_text("Подождите минутку, пока идет генерация сообщения ⏳")
-        logging.debug("Sending request to send_generate_request")
         send_generate_request(update, context)
     else:
         logging.debug("Stage is not awaiting_user_context")
 
 
 def send_generate_request(update: Update, context: CallbackContext) -> None:
-    logging.debug("send_generate_request called")
     user_id = update.effective_user.id
     record_id = context.user_data.get('record_id')
     user_context = context.user_data.get('user_context', '-')
@@ -88,14 +87,10 @@ def send_generate_request(update: Update, context: CallbackContext) -> None:
     logging.debug(f"Sending request with user_id: {user_id}, record_id: {record_id}, user_context: {user_context}")
 
     from AI.gpt_request import generate_birthday_message
-    try:
-        message = generate_birthday_message(record_id, user_id, user_context)
-        if message:
-            logging.debug("Message generated successfully")
-            update.message.reply_text(message)
-        else:
-            logging.error("Failed to generate message")
-            update.message.reply_text("Ошибка при создании поздравления. Попробуйте снова позже.")
-    except Exception as e:
-        logging.error(f"Exception occurred: {e}")
-        update.message.reply_text("Произошла ошибка при генерации сообщения. Попробуйте позже.")
+    message = generate_birthday_message(record_id, user_id, user_context)
+    if message:
+        logging.debug("Message generated successfully")
+        update.message.reply_text(message)
+    else:
+        logging.error("Failed to generate message")
+        update.message.reply_text("Ошибка при создании поздравления. Попробуйте снова позже.")

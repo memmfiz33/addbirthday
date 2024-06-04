@@ -1,3 +1,4 @@
+import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackContext
 from .addbirthday import addbirthday_command
@@ -10,6 +11,8 @@ from .info import info_command
 from .support import support_command
 from AI.ai_buttons import generate_message, handle_generate_callback
 
+logging.basicConfig(level=logging.DEBUG)
+
 def handle_button(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
     user_id = update.effective_user.id
@@ -17,6 +20,8 @@ def handle_button(update: Update, context: CallbackContext) -> None:
 
     if 'stage' not in context.user_data:
         context.user_data['stage'] = ''
+
+    logging.debug(f"Button clicked with data: {query.data}")
 
     if query.data == 'addbirthday':
         addbirthday_command(update, context)
@@ -43,10 +48,10 @@ def handle_button(update: Update, context: CallbackContext) -> None:
         cur.close()
         conn.close()
 
-        keyboard = []
-
-        keyboard.append([InlineKeyboardButton(f"🧹 Удалить", callback_data=f"delete:{id_to_delete}"),
-                         InlineKeyboardButton("🚫 Отмена", callback_data="start")])
+        keyboard = [
+            [InlineKeyboardButton(f"🧹 Удалить", callback_data=f"delete:{id_to_delete}"),
+             InlineKeyboardButton("🚫 Отмена", callback_data="start")]
+        ]
 
         query.message.reply_text(f"Вы уверены, что хотите удалить запись {name}?",
                                  reply_markup=InlineKeyboardMarkup(keyboard))
@@ -82,9 +87,11 @@ def handle_button(update: Update, context: CallbackContext) -> None:
         return
 
     elif query.data == 'generate_message':
+        logging.debug("generate_message triggered")
         generate_message(update, context)
 
     elif query.data.startswith('generate:'):
+        logging.debug("handle_generate_callback triggered")
         handle_generate_callback(update, context)
 
     elif context.user_data['stage'] == 'awaiting_birth_age':
