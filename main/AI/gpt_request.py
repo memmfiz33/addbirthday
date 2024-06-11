@@ -19,7 +19,8 @@ def calculate_age(birth_date):
 def generate_birthday_message(record_id, user_telegram_id, user_context):
     conn = create_conn()
     cur = conn.cursor()
-    cur.execute("SELECT birth_person, birth_date, sex FROM birthdays WHERE id = %s", (record_id,))
+    # Обновляем запрос, чтобы использовать столбец category вместо sex
+    cur.execute("SELECT birth_person, birth_date, category FROM birthdays WHERE id = %s", (record_id,))
     record = cur.fetchone()
     cur.close()
     conn.close()
@@ -28,7 +29,7 @@ def generate_birthday_message(record_id, user_telegram_id, user_context):
         logging.error("Record with id %s not found", record_id)
         return None
 
-    birth_person, birth_date, sex = record
+    birth_person, birth_date, category = record
     age = calculate_age(birth_date)
 
     prompt = {
@@ -51,7 +52,7 @@ def generate_birthday_message(record_id, user_telegram_id, user_context):
             },
             {
                 "role": "user",
-                "text": f"Имя: {birth_person}; Возраст: {age}, Пол: {sex}"
+                "text": f"Имя: {birth_person}; Возраст: {age}, Категория: {category}"
             }
         ]
     }
@@ -73,18 +74,16 @@ def generate_birthday_message(record_id, user_telegram_id, user_context):
         response = requests.post(url, headers=headers, json=prompt)
         response.raise_for_status()
         logging.info("Received response: %s", response.text)
+        result = response.json()["result"]["alternatives"][0]["message"]["text"].strip()
+        logging.debug("Parsed result: %s", result)
         status = "GENERATED"
     except requests.exceptions.RequestException as e:
         logging.error("Request to Yandex API failed: %s", e)
         status = "ERROR"
-
-    if result is None:
-        try:
-            result = response.json()["result"]["alternatives"][0]["message"]["text"].strip()
-            logging.debug("Parsed result: %s", result)
-        except (KeyError, IndexError, ValueError) as e:
-            logging.error("Failed to parse response from Yandex API: %s", e)
-            result = None
+    except (KeyError, IndexError, ValueError) as e:
+        logging.error("Failed to parse response from Yandex API: %s", e)
+        result = None
+        status = "ERROR"
 
     conn = create_conn()
     cur = conn.cursor()
