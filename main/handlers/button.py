@@ -13,7 +13,6 @@ from AI.ai_buttons import generate_message, handle_generate_callback
 
 logging.basicConfig(level=logging.DEBUG)
 
-
 def handle_button(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
     user_id = update.effective_user.id
@@ -99,6 +98,13 @@ def handle_button(update: Update, context: CallbackContext) -> None:
         logging.debug("handle_generate_callback for pagination triggered")
         handle_generate_callback(update, context)
 
+    # Новый блок для обработки этапа awaiting_user_context
+    elif context.user_data['stage'] == 'awaiting_user_context':
+        if query.data == 'start':
+            query.message.reply_text('Отмена действия. Вы перемещены на главный экран')
+            start_command(update, context)
+            return
+
     elif context.user_data['stage'] == 'awaiting_birth_age':
         if query.data == 'start':
             query.message.reply_text('Отмена действия. Вы перемещены на главный экран')
@@ -110,7 +116,7 @@ def handle_button(update: Update, context: CallbackContext) -> None:
 
             keyboard = [
                 [InlineKeyboardButton(m, callback_data=m) for m in ["Январь", "Февраль", "Март"]],
-                [InlineKeyboardButton(m, callback_data=m) for m in ["Апрель", "Май", "Июнь"]],
+                [InlineKeyboardButton(m, callback_data=m) for м in ["Апрель", "Май", "Июнь"]],
                 [InlineKeyboardButton(m, callback_data=m) for м in ["Июль", "Август", "Сентябрь"]],
                 [InlineKeyboardButton(m, callback_data=m) for м in ["Октябрь", "Ноябрь", "Декабрь"]],
                 [InlineKeyboardButton('Отмена', callback_data='start')],

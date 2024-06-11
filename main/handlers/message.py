@@ -1,16 +1,36 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from datetime import datetime, date
 
+
 def is_leap(year: int) -> bool:
     # функция проверки на високосный год
     if year % 4 == 0 and (year % 100 != 0 or year % 400 == 0):
         return True
     return False
 
+
 def handle_message(update, context):
     text = update.message.text
     if 'stage' not in context.user_data:
         context.user_data['stage'] = ''
+
+    # Обработка ввода контекста для поздравления
+    if context.user_data['stage'] == 'awaiting_user_context':
+        user_context = text
+        context.user_data['user_context'] = user_context
+        context.user_data['stage'] = ''
+
+        # Отправляем сообщение пользователю
+        context.bot.send_message(chat_id=update.effective_chat.id, text='Подождите минутку, пока происходит магия')
+
+        # Вызываем функцию для генерации поздравления
+        from AI.ai_buttons import generate_birthday_message
+        message = generate_birthday_message(context.user_data['record_id'], update.effective_user.id, user_context)
+        context.bot.send_message(chat_id=update.effective_chat.id,
+                                 text=message if message else 'Произошла ошибка при генерации поздравления')
+        from handlers.start import start_command
+        start_command(update, context)
+        return
 
     # условие обработки ввода имени
     if context.user_data['stage'] == 'awaiting_birth_person':
@@ -22,7 +42,8 @@ def handle_message(update, context):
         else:
             context.user_data['birth_person'] = text
             context.user_data['stage'] = 'awaiting_birth_age'
-            keyboard = [[InlineKeyboardButton("Пропустить", callback_data='skip'), InlineKeyboardButton('Отмена', callback_data='start')]]  # Добавляем кнопку "Отмена"
+            keyboard = [[InlineKeyboardButton("Пропустить", callback_data='skip'),
+                         InlineKeyboardButton('Отмена', callback_data='start')]]  # Добавляем кнопку "Отмена"
             reply_markup = InlineKeyboardMarkup(keyboard)
             context.bot.send_message(chat_id=update.effective_chat.id, text='Введите ГОД рождения',
                                      reply_markup=reply_markup)
