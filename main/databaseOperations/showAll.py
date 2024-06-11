@@ -49,7 +49,7 @@ def showall_command(update: Update, context: CallbackContext) -> None:
     months = get_months()
 
     response = "===============================\n"
-    response += "Дата рождения, Имя именинника, Пол\n"
+    response += "Дата рождения, Имя, Категория\n"
     response += "===============================\n"
 
     current_month = None

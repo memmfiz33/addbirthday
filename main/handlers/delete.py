@@ -20,9 +20,9 @@ def delete_command(update: Update, context: CallbackContext) -> None:
 
     cur.execute("SELECT id, birth_person, birth_date FROM birthdays WHERE record_status = 'ACTIVE' AND user_telegram_id = %s ORDER BY birth_person ASC LIMIT 10 OFFSET %s", (user_id, record_offset))
 
-    keyboard = []
-
     records = cur.fetchall()
+
+    keyboard = []
 
     for id, name, birth_date in records:
         month_name_russian = get_months()[birth_date.strftime("%B")]
@@ -33,20 +33,26 @@ def delete_command(update: Update, context: CallbackContext) -> None:
 
         keyboard.append([InlineKeyboardButton(f"{name}, {formatted_date}", callback_data=f"confirm_delete:{id}")])
 
-    keyboard.append([InlineKeyboardButton(f"⚪ Стр. {i}" if i != (record_offset // 10) + 1 else f"🟢 Стр. {i}", callback_data=f"page:{i}") for i in range(1, 5)])
+    # Рассчитать общее количество записей, чтобы корректно настроить пагинацию
+    cur.execute("SELECT COUNT(*) FROM birthdays WHERE record_status = 'ACTIVE' AND user_telegram_id = %s", (user_id,))
+    total_records = cur.fetchone()[0]
+    total_pages = (total_records + 9) // 10  # Округление вверх
 
-    if len(records) < 10:
-        for i in range((record_offset // 10) + 2, 5):
-            keyboard[-1][i - 1] = InlineKeyboardButton(f"⚪ Стр. {i}", callback_data="noop")
+    # Создать кнопки страниц
+    pagination_buttons = []
+    for i in range(1, total_pages + 1):
+        if i == (record_offset // 10) + 1:
+            pagination_buttons.append(InlineKeyboardButton(f"🟢 Стр. {i}", callback_data=f"page:{i}"))
+        else:
+            pagination_buttons.append(InlineKeyboardButton(f"⚪ Стр. {i}", callback_data=f"page:{i}"))
 
+    keyboard.append(pagination_buttons)
     keyboard.append([InlineKeyboardButton('🚫 ОТМЕНА', callback_data='start')])
 
     cur.close()
     conn.close()
 
     if update.callback_query:
-        message = update.callback_query.message
+        update.callback_query.message.reply_text('Нажмите на запись для удаления', reply_markup=InlineKeyboardMarkup(keyboard))
     else:
-        message = update.message
-
-    message.reply_text('Нажмите на запись для удаления', reply_markup=InlineKeyboardMarkup(keyboard))
+        update.message.reply_text('Нажмите на запись для удаления', reply_markup=InlineKeyboardMarkup(keyboard))
