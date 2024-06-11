@@ -4,7 +4,7 @@ import threading
 from dotenv import load_dotenv
 
 # Убедитесь, что путь к проекту добавлен в sys.path
-sys.path.append('/home/memmfiz_admin/addbirthday/main')
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Импортируйте настроенный логгер
 from logger.logger import logger
@@ -26,7 +26,7 @@ from notifications.delete_notifications import delete_notifications
 from notifications.support_notifications import create_support_notifications, start_support_notifications_scheduler
 
 # Импортируйте функции для работы с AI
-from AI.ai_buttons import generate_message, handle_generate_callback
+from AI.ai_buttons import generate_message, handle_generate_callback, generate_birthday_message_handler
 
 # Загрузите переменные окружения
 load_dotenv()
@@ -59,6 +59,7 @@ def main() -> None:
 
     # Добавьте обработчики для кнопок
     dp.add_handler(CallbackQueryHandler(handle_button))
+    dp.add_handler(MessageHandler(Filters.text & Filters.reply, generate_birthday_message_handler))  # Добавлен новый обработчик для генерации поздравления
 
     # Запустите нотификации
     notification_thread = threading.Thread(target=scheduler_for_notifications, args=(TOKEN,), daemon=True)

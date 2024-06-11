@@ -75,3 +75,19 @@ def handle_generate_callback(update: Update, context: CallbackContext) -> None:
                 [InlineKeyboardButton("🚫 Отмена", callback_data="start")]
             ]))
         query.answer()
+
+
+def generate_birthday_message_handler(update: Update, context: CallbackContext) -> None:
+    user_context = context.user_data.get('user_context', '')
+    record_id = context.user_data.get('record_id', '')
+    user_id = update.effective_user.id
+
+    message = generate_birthday_message(record_id, user_id, user_context)
+
+    if message:
+        context.bot.send_message(chat_id=update.effective_chat.id, text=message)
+    else:
+        context.bot.send_message(chat_id=update.effective_chat.id, text='Произошла ошибка при генерации поздравления')
+
+    from handlers.start import start_command
+    start_command(update, context)

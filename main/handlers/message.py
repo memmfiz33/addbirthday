@@ -1,6 +1,6 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from datetime import datetime, date
-
+from AI import generate_birthday_message  # Используем абсолютный импорт
 
 def is_leap(year: int) -> bool:
     # функция проверки на високосный год
@@ -24,7 +24,6 @@ def handle_message(update, context):
         context.bot.send_message(chat_id=update.effective_chat.id, text='Подождите минутку, пока происходит магия')
 
         # Вызываем функцию для генерации поздравления
-        from AI.ai_buttons import generate_birthday_message
         message = generate_birthday_message(context.user_data['record_id'], update.effective_user.id, user_context)
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  text=message if message else 'Произошла ошибка при генерации поздравления')
