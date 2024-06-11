@@ -34,7 +34,7 @@ def showall_command(update: Update, context: CallbackContext) -> None:
     SELECT 
         b.birth_date,
         b.birth_person,
-        COALESCE(b.sex, '-') 
+        COALESCE(b.category, '-') 
     FROM birthdays b
     WHERE user_telegram_id = %s
     AND record_status = 'ACTIVE'

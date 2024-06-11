@@ -116,9 +116,9 @@ def handle_button(update: Update, context: CallbackContext) -> None:
 
             keyboard = [
                 [InlineKeyboardButton(m, callback_data=m) for m in ["Январь", "Февраль", "Март"]],
-                [InlineKeyboardButton(m, callback_data=m) for м in ["Апрель", "Май", "Июнь"]],
-                [InlineKeyboardButton(m, callback_data=m) for м in ["Июль", "Август", "Сентябрь"]],
-                [InlineKeyboardButton(m, callback_data=m) for м in ["Октябрь", "Ноябрь", "Декабрь"]],
+                [InlineKeyboardButton(m, callback_data=m) for m in ["Апрель", "Май", "Июнь"]],
+                [InlineKeyboardButton(m, callback_data=m) for m in ["Июль", "Август", "Сентябрь"]],
+                [InlineKeyboardButton(m, callback_data=m) for m in ["Октябрь", "Ноябрь", "Декабрь"]],
                 [InlineKeyboardButton('Отмена', callback_data='start')],
             ]
             reply_markup = InlineKeyboardMarkup(keyboard)
@@ -144,15 +144,19 @@ def handle_button(update: Update, context: CallbackContext) -> None:
             start_command(update, context)
             return
 
-    elif context.user_data['stage'] == 'awaiting_sex':
+    elif context.user_data['stage'] == 'awaiting_category':
         if query.data == 'start':
             query.message.reply_text('Отмена действия. Вы перемещены на главный экран')
             start_command(update, context)
             return
+        elif query.data == '-':
+            context.user_data['category'] = '-'
         else:
-            context.user_data['sex'] = query.data
-            save_text(user_id, update.effective_user.first_name, update.effective_user.last_name,
-                      update.effective_user.username, context.user_data)
-            del context.user_data['stage']
-            context.bot.send_message(chat_id=update.effective_chat.id, text='Данные успешно сохранены! 🎉')
-            start_command(update, context)
+            context.user_data['category'] = query.data  # Сохраняем выбранную категорию вместо пола
+
+        save_text(user_id, update.effective_user.first_name, update.effective_user.last_name,
+                  update.effective_user.username, context.user_data)
+        del context.user_data['stage']
+        context.bot.send_message(chat_id=update.effective_chat.id, text='Данные успешно сохранены! 🎉')
+        start_command(update, context)
+        return

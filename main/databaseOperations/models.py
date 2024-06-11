@@ -54,7 +54,7 @@ class Birthdays(Base):
     user_telegram_name = Column(Text)
     birth_person = Column(DateTime)
     last_modified = Column(DateTime)
-    sex = Column(Text)
+    category = Column(Text)
     birth_date = Column(DateTime)
     record_status = Column(Text)
     is_scheduled = Column(Boolean)

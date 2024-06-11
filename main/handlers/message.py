@@ -8,7 +8,6 @@ def is_leap(year: int) -> bool:
         return True
     return False
 
-
 def handle_message(update, context):
     text = update.message.text
     if 'stage' not in context.user_data:
@@ -106,13 +105,12 @@ def handle_message(update, context):
                 context.user_data.get('birth_month')) + 1  # учет того, что в Python отсчет начинается с 0
             birth_day = int(text)
             context.user_data['birth_date'] = date(birth_year, birth_month, birth_day)
-            context.user_data['stage'] = 'awaiting_sex'
+            context.user_data['stage'] = 'awaiting_category'
 
-            # обработка ввода пола
-            keyboard = [
-                [InlineKeyboardButton("М 🕺", callback_data='М'), InlineKeyboardButton("Ж 💃", callback_data='Ж')],
-                [InlineKeyboardButton("Пропустить", callback_data='-')],
-                [InlineKeyboardButton('Отмена', callback_data='start')],  # Добавляем кнопку "Отмена"
-            ]
+            # обработка ввода категории
+            categories = ["Друзья", "Работа", "Учёба", "Родственники", "Преподаватели", "Хобби", "Знакомые"]
+            keyboard = [[InlineKeyboardButton(category, callback_data=category)] for category in categories]
+            keyboard.append([InlineKeyboardButton("Пропустить", callback_data='-')])
+            keyboard.append([InlineKeyboardButton('Отмена', callback_data='start')])  # Добавляем кнопку "Отмена"
             reply_markup = InlineKeyboardMarkup(keyboard)
-            context.bot.send_message(chat_id=update.effective_chat.id, text='Выберите пол', reply_markup=reply_markup)
+            context.bot.send_message(chat_id=update.effective_chat.id, text='Выберите категорию, которая лучше подходит под человека', reply_markup=reply_markup)
