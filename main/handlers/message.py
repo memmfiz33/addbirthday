@@ -108,9 +108,25 @@ def handle_message(update, context):
             context.user_data['stage'] = 'awaiting_category'
 
             # обработка ввода категории
-            categories = ["Друзья", "Работа", "Учёба", "Родственники", "Преподаватели", "Хобби", "Знакомые"]
-            keyboard = [[InlineKeyboardButton(category, callback_data=category)] for category in categories]
-            keyboard.append([InlineKeyboardButton("Пропустить", callback_data='-')])
+            categories = [
+                ("Друзья 👬", "Друзья"),
+                ("Работа 💼", "Работа"),
+                ("Учёба 📚", "Учёба"),
+                ("Родственники 👪", "Родственники"),
+                ("Преподаватели 👩‍🏫", "Преподаватели"),
+                ("Хобби 🎨", "Хобби"),
+                ("Знакомые 👋", "Знакомые")
+            ]
+            keyboard = [
+                [InlineKeyboardButton(categories[i][0], callback_data=categories[i][1]),
+                 InlineKeyboardButton(categories[i+1][0], callback_data=categories[i+1][1])]
+                for i in range(0, len(categories)-1, 2)
+            ]
+            if len(categories) % 2 == 1:
+                keyboard.append([InlineKeyboardButton(categories[-1][0], callback_data=categories[-1][1]),
+                                 InlineKeyboardButton("Пропустить", callback_data='-')])
+            else:
+                keyboard.append([InlineKeyboardButton("Пропустить", callback_data='-')])
             keyboard.append([InlineKeyboardButton('Отмена', callback_data='start')])  # Добавляем кнопку "Отмена"
             reply_markup = InlineKeyboardMarkup(keyboard)
             context.bot.send_message(chat_id=update.effective_chat.id, text='Выберите категорию, которая лучше подходит под человека', reply_markup=reply_markup)
