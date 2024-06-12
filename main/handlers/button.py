@@ -117,8 +117,8 @@ def handle_button(update: Update, context: CallbackContext) -> None:
             keyboard = [
                 [InlineKeyboardButton(m, callback_data=m) for m in ["Январь", "Февраль", "Март"]],
                 [InlineKeyboardButton(m, callback_data=m) for m in ["Апрель", "Май", "Июнь"]],
-                [InlineKeyboardButton(m, callback_data=m) for м in ["Июль", "Август", "Сентябрь"]],
-                [InlineKeyboardButton(m, callback_data=m) for м in ["Октябрь", "Ноябрь", "Декабрь"]],
+                [InlineKeyboardButton(m, callback_data=m) for m in ["Июль", "Август", "Сентябрь"]],
+                [InlineKeyboardButton(m, callback_data=m) for m in ["Октябрь", "Ноябрь", "Декабрь"]],
                 [InlineKeyboardButton('Отмена', callback_data='start')],
             ]
             reply_markup = InlineKeyboardMarkup(keyboard)
