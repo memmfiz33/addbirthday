@@ -87,7 +87,7 @@ def generate_birthday_message_handler(update: Update, context: CallbackContext) 
     if message:
         context.bot.send_message(chat_id=update.effective_chat.id, text=message)
     else:
-        context.bot.send_message(chat_id=update.effective_chat.id, text='Произошла ошибка при генерации поздравления')
+        context.bot.send_message(chat_id=update.effective_chat.id, text='Магию придётся подождать. Сервис временно недоступен')
 
     from handlers.start import start_command
     start_command(update, context)

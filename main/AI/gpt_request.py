@@ -71,7 +71,8 @@ def generate_birthday_message(record_id, user_telegram_id, user_context):
     result = None
 
     try:
-        response = requests.post(url, headers=headers, json=prompt)
+        # Устанавливаем таймаут в 60 секунд
+        response = requests.post(url, headers=headers, json=prompt, timeout=60)
         response.raise_for_status()
         logging.info("Received response: %s", response.text)
         result = response.json()["result"]["alternatives"][0]["message"]["text"].strip()
@@ -82,20 +83,24 @@ def generate_birthday_message(record_id, user_telegram_id, user_context):
         status = "ERROR"
     except (KeyError, IndexError, ValueError) as e:
         logging.error("Failed to parse response from Yandex API: %s", e)
-        result = None
         status = "ERROR"
 
+    # Вставка в базу данных должна быть в блоке finally, чтобы всегда выполняться, независимо от того, была ли ошибка
     conn = create_conn()
     cur = conn.cursor()
-    cur.execute(
-        "INSERT INTO gpt_requests (user_telegram_id, full_request_text, full_response_text, status) VALUES (%s, %s, %s, %s)",
-        (user_telegram_id,
-         readable_request,
-         result,
-         status))
-    conn.commit()
-    cur.close()
-    conn.close()
+    try:
+        cur.execute(
+            "INSERT INTO gpt_requests (user_telegram_id, full_request_text, full_response_text, status) VALUES (%s, %s, %s, %s)",
+            (user_telegram_id,
+             readable_request,
+             result if result else '',
+             status))
+        conn.commit()
+    except Exception as e:
+        logging.error("Failed to insert into database: %s", e)
+    finally:
+        cur.close()
+        conn.close()
 
     return result
 

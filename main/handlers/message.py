@@ -20,12 +20,12 @@ def handle_message(update, context):
         context.user_data['stage'] = ''
 
         # Отправляем сообщение пользователю
-        context.bot.send_message(chat_id=update.effective_chat.id, text='Подождите минутку, пока происходит магия')
+        context.bot.send_message(chat_id=update.effective_chat.id, text='🧙‍♂️ Мы колдуем для вас, минутка терпения ⌛️')
 
         # Вызываем функцию для генерации поздравления
         message = generate_birthday_message(context.user_data['record_id'], update.effective_user.id, user_context)
         context.bot.send_message(chat_id=update.effective_chat.id,
-                                 text=message if message else 'Произошла ошибка при генерации поздравления')
+                                 text=message if message else '🧙‍♂️ Сервис волшебства временно недоступен, попробуйте позже ')
         from handlers.start import start_command
         start_command(update, context)
         return
