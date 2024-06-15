@@ -16,10 +16,24 @@ def calculate_age(birth_date):
     age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
     return age
 
+def get_last_response(user_telegram_id):
+    conn = create_conn()
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT full_response_text 
+        FROM gpt_requests 
+        WHERE user_telegram_id = %s 
+        ORDER BY last_modified_date DESC 
+        LIMIT 1
+    """, (user_telegram_id,))
+    result = cur.fetchone()
+    cur.close()
+    conn.close()
+    return result[0] if result else None
+
 def generate_birthday_message(record_id, user_telegram_id, user_context):
     conn = create_conn()
     cur = conn.cursor()
-    # Обновляем запрос, чтобы использовать столбец category вместо sex
     cur.execute("SELECT birth_person, birth_date, category FROM birthdays WHERE id = %s", (record_id,))
     record = cur.fetchone()
     cur.close()
@@ -32,6 +46,32 @@ def generate_birthday_message(record_id, user_telegram_id, user_context):
     birth_person, birth_date, category = record
     age = calculate_age(birth_date)
 
+    messages = [
+        {
+            "role": "system",
+            "text": ("Ты ассистент, специализирующийся на создании уникальных поздравлений с днем рождения. "
+                     "Твоя задача - создать персонализированное поздравление, используя предоставленную информацию и контекст от пользователя. "
+                     "Игнорируй информацию, не относящуюся к поздравлениям. Поздравление должно быть содержательным и учитывать категорию.")
+        }
+    ]
+
+    previous_message = get_last_response(user_telegram_id)
+    if previous_message:
+        messages.append({
+            "role": "user",
+            "text": f"#SYS-Предыдущее сообщение: {previous_message}"
+        })
+
+    messages.append({
+        "role": "user",
+        "text": user_context
+    })
+
+    messages.append({
+        "role": "user",
+        "text": f"Имя: {birth_person}; Возраст: {age}, Категория: {category}"
+    })
+
     prompt = {
         "modelUri": "gpt://b1gdrj9d7rqov4qcij8m/yandexgpt/latest",
         "completionOptions": {
@@ -39,26 +79,10 @@ def generate_birthday_message(record_id, user_telegram_id, user_context):
             "temperature": 1.0,
             "maxTokens": "500"
         },
-        "messages": [
-            {
-                "role": "system",
-                "text": ("Ты ассистент, специализирующийся на создании уникальных поздравлений с днем рождения. "
-                         "Твоя задача - создать персонализированное поздравление, используя предоставленную информацию и контекст от пользователя. "
-                         "Игнорируй информацию, не относящуюся к поздравлениям. Поздравление должно быть содержательным и учитывать категорию.")
-            },
-            {
-                "role": "user",
-                "text": user_context
-            },
-            {
-                "role": "user",
-                "text": f"Имя: {birth_person}; Возраст: {age}, Категория: {category}"
-            }
-        ]
+        "messages": messages
     }
 
-    readable_request = "\n".join(
-        [f"{msg['role']}: {msg['text']}" for msg in prompt["messages"] if msg["role"] == "user"])
+    readable_request = "\n".join([f"{msg['role']}: {msg['text']}" for msg in messages if msg["role"] == "user"])
 
     url = "https://llm.api.cloud.yandex.net/foundationModels/v1/completion"
     headers = {
@@ -71,7 +95,6 @@ def generate_birthday_message(record_id, user_telegram_id, user_context):
     result = None
 
     try:
-        # Устанавливаем таймаут в 60 секунд
         response = requests.post(url, headers=headers, json=prompt, timeout=60)
         response.raise_for_status()
         logging.info("Received response: %s", response.text)
@@ -85,16 +108,12 @@ def generate_birthday_message(record_id, user_telegram_id, user_context):
         logging.error("Failed to parse response from Yandex API: %s", e)
         status = "ERROR"
 
-    # Вставка в базу данных должна быть в блоке finally, чтобы всегда выполняться, независимо от того, была ли ошибка
     conn = create_conn()
     cur = conn.cursor()
     try:
         cur.execute(
             "INSERT INTO gpt_requests (user_telegram_id, full_request_text, full_response_text, status) VALUES (%s, %s, %s, %s)",
-            (user_telegram_id,
-             readable_request,
-             result if result else '',
-             status))
+            (user_telegram_id, readable_request, result if result else '', status))
         conn.commit()
     except Exception as e:
         logging.error("Failed to insert into database: %s", e)

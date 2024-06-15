@@ -1,3 +1,4 @@
+import psycopg2
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from datetime import datetime, date
 from AI import generate_birthday_message  # Используем абсолютный импорт
@@ -9,6 +10,7 @@ def is_leap(year: int) -> bool:
 
 def handle_message(update, context):
     text = update.message.text
+    user_id = update.effective_user.id
     if 'stage' not in context.user_data:
         context.user_data['stage'] = ''
 
@@ -19,7 +21,8 @@ def handle_message(update, context):
 
         context.bot.send_message(chat_id=update.effective_chat.id, text='🧙‍♂️ Мы колдуем для вас, минутка терпения ⌛️')
 
-        message = generate_birthday_message(context.user_data['record_id'], update.effective_user.id, user_context)
+        message = generate_birthday_message(context.user_data['record_id'], user_id, user_context)
+        context.user_data['previous_message'] = message
         keyboard = [
             [InlineKeyboardButton("✔️ Ок", callback_data='cancel')],
             [InlineKeyboardButton("✏️ Изменить", callback_data='edit')]
@@ -28,7 +31,6 @@ def handle_message(update, context):
         context.bot.send_message(chat_id=update.effective_chat.id, text=message if message else '🧙‍♂️ Сервис волшебства временно недоступен, попробуйте позже ', reply_markup=reply_markup)
         return
 
-    # дальнейшие условия обработки ввода контекста...
     if context.user_data['stage'] == 'awaiting_birth_person':
         if len(text) > 100:
             keyboard = [[InlineKeyboardButton('Отмена', callback_data='start')]]
@@ -65,8 +67,8 @@ def handle_message(update, context):
         keyboard = [
             [InlineKeyboardButton(m, callback_data=m) for m in ["Январь", "Февраль", "Март"]],
             [InlineKeyboardButton(m, callback_data=m) for m in ["Апрель", "Май", "Июнь"]],
-            [InlineKeyboardButton(m, callback_data=m) for m in ["Июль", "Август", "Сентябрь"]],
-            [InlineKeyboardButton(m, callback_data=m) for m in ["Октябрь", "Ноябрь", "Декабрь"]],
+            [InlineKeyboardButton(m, callback_data=m) for м in ["Июль", "Август", "Сентябрь"]],
+            [InlineKeyboardButton(m, callback_data=m) for м in ["Октябрь", "Ноябрь", "Декабрь"]],
             [InlineKeyboardButton('Отмена', callback_data='start')],
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
