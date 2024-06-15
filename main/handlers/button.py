@@ -38,6 +38,17 @@ def handle_button(update: Update, context: CallbackContext) -> None:
     elif query.data == 'support':
         support_command(update, context)
 
+    elif query.data == 'cancel':
+        start_command(update, context)
+
+    elif query.data == 'edit':
+        context.user_data['stage'] = 'awaiting_user_context'
+        query.message.reply_text("Напишите что-то интересное о человеке, это может быть общее увлечение, интересная история или что-то еще. Если нечего добавить, напишите 'Нет' и отправьте.",
+                                 reply_markup=InlineKeyboardMarkup([
+                                     [InlineKeyboardButton("🚫 Отмена", callback_data="start")]
+                                 ]))
+        return
+
     elif query.data.startswith('confirm_delete:'):
         id_to_delete = query.data.replace("confirm_delete:", "")
 
@@ -76,7 +87,7 @@ def handle_button(update: Update, context: CallbackContext) -> None:
         return
 
     elif query.data.startswith('page:'):
-        delete_command(update, context)  # изменено для обработки страницы удаления
+        delete_command(update, context)
 
     elif query.data == 'noop':
         pass
@@ -98,7 +109,6 @@ def handle_button(update: Update, context: CallbackContext) -> None:
         logging.debug("handle_generate_callback for pagination triggered")
         handle_generate_callback(update, context)
 
-    # Новый блок для обработки этапа awaiting_user_context
     elif context.user_data['stage'] == 'awaiting_user_context':
         if query.data == 'start':
             query.message.reply_text('Отмена действия. Вы перемещены на главный экран')
@@ -152,7 +162,7 @@ def handle_button(update: Update, context: CallbackContext) -> None:
         elif query.data == '-':
             context.user_data['category'] = '-'
         else:
-            context.user_data['category'] = query.data  # Сохраняем выбранную категорию вместо пола
+            context.user_data['category'] = query.data
 
         save_text(user_id, update.effective_user.first_name, update.effective_user.last_name,
                   update.effective_user.username, context.user_data)

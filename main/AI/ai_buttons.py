@@ -30,7 +30,6 @@ def generate_message(update: Update, context: CallbackContext) -> None:
 
         keyboard.append([InlineKeyboardButton(f"{name}, {formatted_date}", callback_data=f"generate:{id}")])
 
-    # Adding pagination buttons
     keyboard.append([InlineKeyboardButton(f"⚪ Стр. {i}" if i != (record_offset // 10) + 1 else f"🟢 Стр. {i}",
                                           callback_data=f"generate_page:{i}") for i in range(1, 5)])
 
@@ -57,13 +56,11 @@ def handle_generate_callback(update: Update, context: CallbackContext) -> None:
     data = query.data
 
     if data.startswith("generate_page:"):
-        # Handle page navigation
         page_number = int(data.split(":")[1])
         context.user_data['record_offset'] = (page_number - 1) * 10
         generate_message(update, context)
         query.answer()
     elif data.startswith("generate:"):
-        # Handle record selection
         user_id = update.effective_user.id
         record_id = data.split(':')[1]
         context.user_data['record_id'] = record_id
