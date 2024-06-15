@@ -45,7 +45,7 @@ def handle_button(update: Update, context: CallbackContext) -> None:
         context.user_data['stage'] = 'awaiting_user_context'
         query.message.reply_text("Напишите что-то интересное о человеке, это может быть общее увлечение, интересная история или что-то еще. Если нечего добавить, напишите 'Нет' и отправьте.",
                                  reply_markup=InlineKeyboardMarkup([
-                                     [InlineKeyboardButton("🚫 Отмена", callback_data="start")]
+                                     [InlineKeyboardButton("❌ Отмена", callback_data="start")]
                                  ]))
         return
 
@@ -61,7 +61,7 @@ def handle_button(update: Update, context: CallbackContext) -> None:
 
         keyboard = [
             [InlineKeyboardButton(f"🧹 Удалить", callback_data=f"delete:{id_to_delete}"),
-             InlineKeyboardButton("🚫 Отмена", callback_data="start")]
+             InlineKeyboardButton("❌ Отмена", callback_data="start")]
         ]
 
         query.message.reply_text(f"Вы уверены, что хотите удалить запись {name}?",
