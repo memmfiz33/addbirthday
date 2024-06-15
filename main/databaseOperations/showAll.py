@@ -68,7 +68,7 @@ def showall_command(update: Update, context: CallbackContext) -> None:
 
     keyboard = [
         [InlineKeyboardButton('🚫 Отмена', callback_data='start'),
-         InlineKeyboardButton('🗑️ Перейти к удалению', callback_data='delete')]
+         InlineKeyboardButton('🗑️ Удаление записей', callback_data='delete')]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     update.effective_message.reply_text(response, reply_markup=reply_markup)
