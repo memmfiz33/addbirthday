@@ -48,7 +48,7 @@ def generate_message(update: Update, context: CallbackContext) -> None:
     else:
         message = update.message
 
-    message.reply_text('Выберите запись для создания поздравления', reply_markup=InlineKeyboardMarkup(keyboard))
+    message.reply_text('Нажмите на запись для создания поздравления', reply_markup=InlineKeyboardMarkup(keyboard))
 
 
 def handle_generate_callback(update: Update, context: CallbackContext) -> None:
