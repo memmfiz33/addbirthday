@@ -24,7 +24,7 @@ def handle_message(update, context):
         message = generate_birthday_message(context.user_data['record_id'], user_id, user_context)
         context.user_data['previous_message'] = message
         keyboard = [
-            [InlineKeyboardButton("✅️ Ок", callback_data='cancel')],
+            [InlineKeyboardButton("✅️ Завершить", callback_data='cancel')],
             [InlineKeyboardButton("✏️ Изменить", callback_data='edit')]
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)

@@ -11,10 +11,12 @@ load_dotenv()
 
 YGPT_TOKEN = os.getenv('YGPT_TOKEN')
 
+
 def calculate_age(birth_date):
     today = datetime.today()
     age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
     return age
+
 
 def get_last_response(user_telegram_id):
     conn = create_conn()
@@ -31,8 +33,10 @@ def get_last_response(user_telegram_id):
     conn.close()
     return result[0] if result else None
 
+
 def get_category_context(category):
     return category
+
 
 def generate_birthday_message(record_id, user_telegram_id, user_context):
     conn = create_conn()
@@ -116,6 +120,12 @@ def generate_birthday_message(record_id, user_telegram_id, user_context):
         result = response.json()["result"]["alternatives"][0]["message"]["text"].strip()
         logging.debug("Parsed result: %s", result)
         status = "GENERATED"
+
+        # Проверка на неподходящий контент
+        if "К сожалению, я не могу ничего сказать об этом. Давайте сменим тему?" in result:
+            result = ("Извините, но ваш запрос содержит недопустимый или неподходящий контент. "
+                      "Давайте попробуем сформулировать ваш запрос по-другому.")
+
     except requests.exceptions.RequestException as e:
         logging.error("Request to Yandex API failed: %s", e)
         status = "ERROR"
@@ -138,8 +148,10 @@ def generate_birthday_message(record_id, user_telegram_id, user_context):
 
     return result
 
+
 if __name__ == "__main__":
-    message = generate_birthday_message(1, 319661378, "Это тестовый контекст")  # Replace 1 with the actual record_id and user_id for testing
+    message = generate_birthday_message(1, 319661378,
+                                        "Это тестовый контекст")  # Replace 1 with the actual record_id and user_id for testing
     if message:
         logging.info("Generated birthday message: %s", message)
     else:
